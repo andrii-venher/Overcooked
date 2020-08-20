@@ -1,13 +1,29 @@
 #include <SFML/Graphics.hpp>
+#include "Player.h"
+
+using namespace sf;
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Green);
+    sf::RenderWindow window(sf::VideoMode(200, 200), "Overcooked!");
+
+    Texture t;
+    t.loadFromFile("Images/tiles.png");
+
+    Player player(t, IntRect(0, 0, 32, 32), 16, 16);
+
+    /*Sprite s;
+    s.setTexture(t);
+    s.setTextureRect(IntRect(0, 0, 32, 32));*/
+
+    Clock clock;
 
     while (window.isOpen())
     {
+        float time = clock.getElapsedTime().asMicroseconds();
+        time /= 500;
+        clock.restart();
+
         sf::Event event;
         while (window.pollEvent(event))
         {
@@ -15,8 +31,12 @@ int main()
                 window.close();
         }
 
+        player.update(time);
+
         window.clear();
-        window.draw(shape);
+       // window.draw(s);
+        window.draw(player.getSprite());
+        window.draw(player.getInHands());
         window.display();
     }
 
