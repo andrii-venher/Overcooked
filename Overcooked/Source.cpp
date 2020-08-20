@@ -1,16 +1,18 @@
 #include <SFML/Graphics.hpp>
 #include "Player.h"
-
+#include "Map.h"
 using namespace sf;
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(200, 200), "Overcooked!");
+    sf::RenderWindow window(sf::VideoMode(320, 320), "Overcooked!");
 
     Texture t;
     t.loadFromFile("Images/tiles.png");
 
     Player player(t, IntRect(0, 0, 32, 32), 16, 16);
+
+    Map map(t);
 
     /*Sprite s;
     s.setTexture(t);
@@ -35,6 +37,7 @@ int main()
 
         window.clear();
        // window.draw(s);
+        map.repaint(window);
         window.draw(player.getSprite());
         window.draw(player.getInHands());
         window.display();
