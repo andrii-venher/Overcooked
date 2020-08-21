@@ -14,10 +14,12 @@ Map::Map(Texture& texture) : width(10), height(10)
 	{
 		for (int j = 0; j < width; j++)
 		{
-			if(i == 0 || j == 0 || i == height - 1 || j == width - 1)
+			if (i == 0 && j == 5)
+				tileMap[i][j] = MapObjects::CHECKOUT;
+			else if (i == 0 || j == 0 || i == height - 1 || j == width - 1)
 				tileMap[i][j] = MapObjects::TABLE;
-			//if (i == 1 && j == 1)
-				//tileMap[i][j] = MapObjects::PLAYER;
+			else
+				tileMap[i][j] = MapObjects::FLOOR;
 		}
 	}
 }
@@ -29,14 +31,14 @@ void Map::repaint(RenderWindow& window)
 		for (int j = 0; j < width; j++)
 		{
 			if (tileMap[i][j] == MapObjects::TABLE)
-			{
 				sprite.setTextureRect(IntRect(64, 0, 32, 32));
-
-				sprite.setPosition(j * 32, i * 32);
-
-				window.draw(sprite);
-			}
+			else if (tileMap[i][j] == MapObjects::CHECKOUT)
+				sprite.setTextureRect(IntRect(96, 0, 32, 32));
+			else if(tileMap[i][j] == MapObjects::FLOOR)
+				sprite.setTextureRect(IntRect(128, 0, 32, 32));
 			
+			sprite.setPosition(j * 32, i * 32);
+			window.draw(sprite);
 		}
 	}
 }

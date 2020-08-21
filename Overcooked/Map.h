@@ -9,7 +9,7 @@ class Map
 	const int width;
 	const int height;
 
-	enum class MapObjects { PLAYER, TABLE, CHECKOUT };
+	enum class MapObjects { PLAYER, TABLE, FLOOR, CHECKOUT };
 
 	MapObjects** tileMap;
 public:
