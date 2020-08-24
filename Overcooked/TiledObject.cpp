@@ -1,10 +1,14 @@
 #include "TiledObject.h"
 
-TiledObject::TiledObject(Texture& texture, float _x, float _y, IntRect _tileRect)
+TiledObject::TiledObject()
+{
+}
+
+TiledObject::TiledObject(Texture& texture, float _x, float _y, int tileX, int tileY)
 {
 	sprite.setTexture(texture);
 
-	tileRect = _tileRect;
+	tileRect = { tileX * TILE_SIZE, tileY * TILE_SIZE, TILE_SIZE, TILE_SIZE };
 
 	sprite.setTextureRect(tileRect);
 

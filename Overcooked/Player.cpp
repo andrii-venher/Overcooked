@@ -1,7 +1,7 @@
 #include "Player.h"
 
-Player::Player(Texture& texture, float _x, float _y, IntRect _tileRect, std::list<TiledObject*>& _objects) : 
-	TiledObject(texture, _x, _y, _tileRect), 
+Player::Player(Texture& texture, float _x, float _y, int tileX, int tileY, std::list<TiledObject*>& _objects) : 
+	TiledObject(texture, _x, _y, tileX, tileY), 
 	objects(_objects)
 {
 	state = States::STAY;
@@ -9,8 +9,9 @@ Player::Player(Texture& texture, float _x, float _y, IntRect _tileRect, std::lis
 	xSpeed = 0;
 	ySpeed = 0;
 
-	//inHands = nullptr;
-	inHands = new TiledObject(texture, _x, _y, IntRect(32, 0, 32, 32));
+	inHands = nullptr;
+	//inHands = new TiledObject;
+	//inHands = new TiledObject(texture, _x, _y, 1, 0);
 }
 
 void Player::update(float time)
@@ -42,6 +43,9 @@ void Player::update(float time)
 	case Player::States::STAY:
 		xSpeed = ySpeed = 0;
 		break;
+	case Player::States::NEEDS_UPDATE:
+		xSpeed = ySpeed = 0;
+		break;
 	default:
 		break;
 	}
@@ -51,43 +55,46 @@ void Player::update(float time)
 
 	sprite.setPosition(x, y);
 
-	switch (state)
+	if (isSomethingInHands())
 	{
-	case Player::States::LEFT:
-		inHands->setPosition(x - inHands->getTileRect().width, y);
-		break;
-	case Player::States::UP:
-		inHands->setPosition(x, y - inHands->getTileRect().height);
-		break;
-	case Player::States::RIGHT:
-		inHands->setPosition(x + inHands->getTileRect().width, y);
-		break;
-	case Player::States::DOWN:
-		inHands->setPosition(x, y + inHands->getTileRect().height);
-		break;
-	case Player::States::NEEDS_UPDATE:
-	{
-		switch (getRotation())
+		switch (state)
 		{
-		case Rotations::LEFT:
+		case Player::States::LEFT:
 			inHands->setPosition(x - inHands->getTileRect().width, y);
 			break;
-		case Rotations::UP:
+		case Player::States::UP:
 			inHands->setPosition(x, y - inHands->getTileRect().height);
 			break;
-		case Rotations::RIGHT:
+		case Player::States::RIGHT:
 			inHands->setPosition(x + inHands->getTileRect().width, y);
 			break;
-		case Rotations::DOWN:
+		case Player::States::DOWN:
 			inHands->setPosition(x, y + inHands->getTileRect().height);
 			break;
+		case Player::States::NEEDS_UPDATE:
+		{
+			switch (getRotation())
+			{
+			case Rotations::LEFT:
+				inHands->setPosition(x - inHands->getTileRect().width, y);
+				break;
+			case Rotations::UP:
+				inHands->setPosition(x, y - inHands->getTileRect().height);
+				break;
+			case Rotations::RIGHT:
+				inHands->setPosition(x + inHands->getTileRect().width, y);
+				break;
+			case Rotations::DOWN:
+				inHands->setPosition(x, y + inHands->getTileRect().height);
+				break;
+			default:
+				break;
+			}
+		}
+		break;
 		default:
 			break;
 		}
-	}
-		break;
-	default:
-		break;
 	}
 
 	state = States::STAY;
@@ -101,22 +108,20 @@ void Player::trackControls()
 		{
 			state = States::LEFT;
 		}
-		if (Keyboard::isKeyPressed(Keyboard::W))
+		else if (Keyboard::isKeyPressed(Keyboard::W))
 		{
 			state = States::UP;
 		}
-		if (Keyboard::isKeyPressed(Keyboard::D))
+		else if (Keyboard::isKeyPressed(Keyboard::D))
 		{
 			state = States::RIGHT;
 		}
-		if (Keyboard::isKeyPressed(Keyboard::S))
+		else if (Keyboard::isKeyPressed(Keyboard::S))
 		{
 			state = States::DOWN;
 		}
-		if (Keyboard::isKeyPressed(Keyboard::T))
+		else if (Keyboard::isKeyPressed(Keyboard::Space))
 		{
-			std::cout << (int)x / 32 << " " << (int)y / 32 << "\n";
-			takeIntoHands();
 			state = States::NEEDS_UPDATE;
 		}
 	}
@@ -125,6 +130,11 @@ void Player::trackControls()
 Sprite Player::getSprite()
 {
 	return sprite;
+}
+
+bool Player::isSomethingInHands()
+{
+	return (inHands) ? true : false;
 }
 
 Sprite Player::getInHandsSprite()
@@ -143,26 +153,33 @@ void Player::takeIntoHands()
 	int objYTile;
 	for (auto it = objects.begin(); it != objects.end(); ++it)
 	{
-		playerXTile = (x - 0) / 32;
-		playerYTile = (y - 0) / 32;
-		objXTile = ((*it)->getSprite().getPosition().x - 0) / 32;
-		objYTile = ((*it)->getSprite().getPosition().y - 0) / 32;
+		playerXTile = x / TILE_SIZE;
+		playerYTile = y / TILE_SIZE;
+		objXTile = (*it)->getSprite().getPosition().x / TILE_SIZE;
+		objYTile = (*it)->getSprite().getPosition().y / TILE_SIZE;
 		if ((getRotation() == Rotations::LEFT && playerXTile == objXTile + 1 && playerYTile == objYTile) ||
 			(getRotation() == Rotations::UP && playerXTile == objXTile && playerYTile == objYTile + 1) ||
 			(getRotation() == Rotations::RIGHT && playerXTile == objXTile - 1 && playerYTile == objYTile) ||
-			(getRotation() == Rotations::DOWN && playerXTile == objXTile && playerYTile == objYTile - 1))
+			(getRotation() == Rotations::DOWN && playerXTile == objXTile && playerYTile == objYTile - 1) ||
+			playerXTile == objXTile && playerYTile == objYTile)
 		{
 			delete inHands;
 			inHands = *it;
 			objects.erase(it);
 			break;
 		}
-		/*if ((int)(*it)->getSprite().getPosition().x / 32 == (int)x / 32 && (int)(*it)->getSprite().getPosition().y / 32 == (int)y / 32 + 1)
-		{
-			delete inHands;
-			inHands = *it;
-			objects.erase(it);
-			break;
-		}*/
 	}
+}
+
+void Player::putFromHands()
+{
+	int objXTile = inHands->getSprite().getPosition().x / TILE_SIZE;
+	objXTile *= TILE_SIZE;
+	objXTile += TILE_SIZE / 2;
+	int objYTile = inHands->getSprite().getPosition().y / TILE_SIZE;
+	objYTile *= TILE_SIZE;
+	objYTile += TILE_SIZE / 2;
+	inHands->setPosition(objXTile, objYTile);
+	objects.push_back(inHands);
+	inHands = nullptr;
 }

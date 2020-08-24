@@ -14,15 +14,12 @@ int main()
 
     std::list<TiledObject*> objects;
 
-    objects.push_back(new Food(t, 80, 80, IntRect(32, 32, 32, 32)));
+    objects.push_back(new Food(t, 80, 80, 1, 1));
+    //objects.push_back(new Food(t, 160, 160, 1, 0));
 
-    Player player(t, 16, 16, IntRect(0, 0, 32, 32), objects);
+    Player player(t, 16, 16, 0, 0, objects);
 
     Map map(t);
-
-    /*Sprite s;
-    s.setTexture(t);
-    s.setTextureRect(IntRect(0, 0, 32, 32));*/
 
     Clock clock;
 
@@ -37,19 +34,35 @@ int main()
         {
             if (event.type == sf::Event::Closed)
                 window.close();
+            if (event.type == sf::Event::KeyPressed)
+            {
+                if (event.key.code == sf::Keyboard::Space)
+                {
+                    if (player.isSomethingInHands())
+                    {
+                        player.putFromHands();
+                    }
+                    else
+                    {
+                        player.takeIntoHands();
+                    }
+                }
+            }
         }
 
         player.update(time);
 
         window.clear();
-       // window.draw(s);
         map.repaint(window);
         for (TiledObject* obj : objects)
         {
             window.draw(obj->getSprite());
         }
         window.draw(player.getSprite());
-        window.draw(player.getInHandsSprite());
+        if (player.isSomethingInHands())
+        {
+            window.draw(player.getInHandsSprite());
+        }
         window.display();
     }
 

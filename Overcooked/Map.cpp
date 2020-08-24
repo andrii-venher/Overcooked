@@ -31,13 +31,13 @@ void Map::repaint(RenderWindow& window)
 		for (int j = 0; j < width; j++)
 		{
 			if (tileMap[i][j] == MapObjects::TABLE)
-				sprite.setTextureRect(IntRect(64, 0, 32, 32));
+				sprite.setTextureRect(IntRect(64, 0, TILE_SIZE, TILE_SIZE));
 			else if (tileMap[i][j] == MapObjects::CHECKOUT)
-				sprite.setTextureRect(IntRect(96, 0, 32, 32));
+				sprite.setTextureRect(IntRect(96, 0, TILE_SIZE, TILE_SIZE));
 			else if(tileMap[i][j] == MapObjects::FLOOR)
-				sprite.setTextureRect(IntRect(128, 0, 32, 32));
+				sprite.setTextureRect(IntRect(128, 0, TILE_SIZE, TILE_SIZE));
 			
-			sprite.setPosition(j * 32, i * 32);
+			sprite.setPosition(j * TILE_SIZE, i * TILE_SIZE);
 			window.draw(sprite);
 		}
 	}
