@@ -15,13 +15,14 @@ class Player : public TiledObject
 	float ySpeed;
 	std::list<TiledObject*>& objects;
 public:
-	Player(Texture& texture, float _x, float _y, int tileX, int tileY, std::list<TiledObject*>& _objects);
+	Player(Texture& texture, float _x, float _y, std::list<TiledObject*>& _objects);
 	void update(float time);
 	void trackControls();
 	Sprite getSprite();
 	bool isSomethingInHands();
 	Sprite getInHandsSprite();
-	void takeIntoHands();
-	void putFromHands();
+	void take();
+	void put();
+	std::pair<int, int> getNextPosition();
 };
 

@@ -51,3 +51,8 @@ Rotations TiledObject::getRotation()
 		break;
 	}
 }
+
+void TiledObject::draw(RenderWindow& rw)
+{
+	rw.draw(sprite);
+}

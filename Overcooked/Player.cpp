@@ -1,7 +1,7 @@
 #include "Player.h"
 
-Player::Player(Texture& texture, float _x, float _y, int tileX, int tileY, std::list<TiledObject*>& _objects) : 
-	TiledObject(texture, _x, _y, tileX, tileY), 
+Player::Player(Texture& texture, float _x, float _y, std::list<TiledObject*>& _objects) : 
+	TiledObject(texture, _x, _y, 0, 0), 
 	objects(_objects)
 {
 	state = States::STAY;
@@ -145,7 +145,7 @@ Sprite Player::getInHandsSprite()
 		return Sprite();
 }
 
-void Player::takeIntoHands()
+void Player::take()
 {
 	int playerXTile;
 	int playerYTile;
@@ -171,7 +171,7 @@ void Player::takeIntoHands()
 	}
 }
 
-void Player::putFromHands()
+void Player::put()
 {
 	int objXTile = inHands->getSprite().getPosition().x / TILE_SIZE;
 	objXTile *= TILE_SIZE;
@@ -182,4 +182,21 @@ void Player::putFromHands()
 	inHands->setPosition(objXTile, objYTile);
 	objects.push_back(inHands);
 	inHands = nullptr;
+}
+
+std::pair<int, int> Player::getNextPosition()
+{
+	switch (getRotation())
+	{
+	case Rotations::LEFT:
+		return std::make_pair(x - TILE_SIZE + TILE_SIZE / 2, y + TILE_SIZE / 2);
+	case Rotations::UP:
+		return std::make_pair(x + TILE_SIZE / 2, y - TILE_SIZE + TILE_SIZE / 2);
+	case Rotations::RIGHT:
+		return std::make_pair(x + TILE_SIZE + TILE_SIZE / 2, y + TILE_SIZE / 2);
+	case Rotations::DOWN:
+		return std::make_pair(x + TILE_SIZE / 2, y + TILE_SIZE + TILE_SIZE / 2);
+	default:
+		break;
+	}
 }

@@ -3,6 +3,7 @@
 #include "Map.h"
 #include "Food.h"
 #include <list>
+
 using namespace sf;
 
 int main()
@@ -14,12 +15,11 @@ int main()
 
     std::list<TiledObject*> objects;
 
-    objects.push_back(new Food(t, 80, 80, 1, 1));
-    //objects.push_back(new Food(t, 160, 160, 1, 0));
+    objects.push_back(new Tomato(t, 80, 80));
 
-    Player player(t, 16, 16, 0, 0, objects);
+    Player player(t, 16, 16, objects);
 
-    Map map(t);
+    Map map(t, objects);
 
     Clock clock;
 
@@ -40,11 +40,18 @@ int main()
                 {
                     if (player.isSomethingInHands())
                     {
-                        player.putFromHands();
+                        player.put();
                     }
                     else
                     {
-                        player.takeIntoHands();
+                        player.take();
+                    }
+                }
+                else if (event.key.code == sf::Keyboard::C)
+                {
+                    if (map.interact(player.getNextPosition().first, player.getNextPosition().second) == Actions::TAKE)
+                    {
+                        player.take();
                     }
                 }
             }
@@ -53,12 +60,12 @@ int main()
         player.update(time);
 
         window.clear();
-        map.repaint(window);
+        map.draw(window);
         for (TiledObject* obj : objects)
         {
-            window.draw(obj->getSprite());
+            obj->draw(window);
         }
-        window.draw(player.getSprite());
+        player.draw(window);
         if (player.isSomethingInHands())
         {
             window.draw(player.getInHandsSprite());

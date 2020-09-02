@@ -6,6 +6,7 @@
 using namespace sf;
 
 enum class Rotations { LEFT, UP, RIGHT, DOWN };
+enum class Actions { WAIT, TAKE };
 
 class TiledObject
 {
@@ -21,5 +22,6 @@ public:
 	void setPosition(float _x, float _y);
 	IntRect getTileRect();
 	Rotations getRotation();
+	void draw(RenderWindow& rw);
 };
 
