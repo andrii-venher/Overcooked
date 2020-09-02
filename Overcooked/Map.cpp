@@ -40,23 +40,8 @@ void Map::draw(RenderWindow& rw)
 			else if(tileMap[i][j] == MapObjects::FLOOR)
 				sprite.setTextureRect(IntRect(4 * TILE_SIZE, 0 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
 			else if (tileMap[i][j] == MapObjects::TOMATO_DISPENSER)
-			{
-				/*static Tomato* tomato = new Tomato(texture, j * TILE_SIZE + 16, i * TILE_SIZE + 16);
-				if (tomato == nullptr)
-				{
-					tomato = new Tomato(texture, j * TILE_SIZE + 16, i * TILE_SIZE + 16);
-					objects.push_back(tomato);
-				}*/
-				/*if (std::find(std::begin(objects), std::end(objects), new Tomato(texture, j * TILE_SIZE + 16, i * TILE_SIZE + 16)) == std::end(objects))
-				{
-					objects.push_back(new Tomato(texture, j * TILE_SIZE + 16, i * TILE_SIZE + 16));
-					std::cout << "new tomato\n";
-				}*/
-					
 				sprite.setTextureRect(IntRect(0 * TILE_SIZE, 1 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
-			}
 				
-			
 			sprite.setPosition(j * TILE_SIZE, i * TILE_SIZE);
 			rw.draw(sprite);
 		}
@@ -74,4 +59,9 @@ Actions Map::interact(int _x, int _y)
 		return Actions::TAKE;
 	}
 	return Actions::WAIT;
+}
+
+MapObjects** Map::getMap()
+{
+	return tileMap;
 }

@@ -10,33 +10,43 @@ Player::Player(Texture& texture, float _x, float _y, std::list<TiledObject*>& _o
 	ySpeed = 0;
 
 	inHands = nullptr;
-	//inHands = new TiledObject;
-	//inHands = new TiledObject(texture, _x, _y, 1, 0);
 }
 
-void Player::update(float time)
+void Player::update(float time, MapObjects** map)
 {
 	trackControls();
 
 	switch (state)
 	{
 	case Player::States::LEFT:
-		xSpeed = -0.1;
+		if (map[getNextPosition().second / TILE_SIZE][(getNextPosition().first + TILE_SIZE / 2) / TILE_SIZE] == MapObjects::FLOOR)
+			xSpeed = -0.1;
+		else
+			xSpeed = 0;
 		ySpeed = 0;
 		sprite.setRotation(90);
 		break;
 	case Player::States::UP:
-		ySpeed = -0.1;
+		if (map[(getNextPosition().second + TILE_SIZE / 2) / TILE_SIZE][getNextPosition().first / TILE_SIZE] == MapObjects::FLOOR)
+			ySpeed = -0.1;
+		else
+			ySpeed = 0;
 		xSpeed = 0;
 		sprite.setRotation(180);
 		break;
 	case Player::States::RIGHT:
-		xSpeed = 0.1;
+		if (map[getNextPosition().second / TILE_SIZE][(getNextPosition().first - TILE_SIZE / 2) / TILE_SIZE] == MapObjects::FLOOR)
+			xSpeed = 0.1;
+		else
+			xSpeed = 0;
 		ySpeed = 0;
 		sprite.setRotation(270);
 		break;
 	case Player::States::DOWN:
-		ySpeed = 0.1;
+		if (map[(getNextPosition().second - TILE_SIZE / 2) / TILE_SIZE][getNextPosition().first / TILE_SIZE] == MapObjects::FLOOR)
+			ySpeed = 0.1;
+		else
+			ySpeed = 0;
 		xSpeed = 0;
 		sprite.setRotation(0);
 		break;
@@ -179,6 +189,12 @@ void Player::put()
 	int objYTile = inHands->getSprite().getPosition().y / TILE_SIZE;
 	objYTile *= TILE_SIZE;
 	objYTile += TILE_SIZE / 2;
+	Vector2f pos(objXTile, objYTile);
+	for (auto obj : objects)
+	{
+		if (obj->getSprite().getPosition() == pos)
+			return;
+	}
 	inHands->setPosition(objXTile, objYTile);
 	objects.push_back(inHands);
 	inHands = nullptr;
@@ -189,13 +205,13 @@ std::pair<int, int> Player::getNextPosition()
 	switch (getRotation())
 	{
 	case Rotations::LEFT:
-		return std::make_pair(x - TILE_SIZE + TILE_SIZE / 2, y + TILE_SIZE / 2);
+		return std::make_pair(x - TILE_SIZE, y);
 	case Rotations::UP:
-		return std::make_pair(x + TILE_SIZE / 2, y - TILE_SIZE + TILE_SIZE / 2);
+		return std::make_pair(x, y - TILE_SIZE);
 	case Rotations::RIGHT:
-		return std::make_pair(x + TILE_SIZE + TILE_SIZE / 2, y + TILE_SIZE / 2);
+		return std::make_pair(x + TILE_SIZE, y);
 	case Rotations::DOWN:
-		return std::make_pair(x + TILE_SIZE / 2, y + TILE_SIZE + TILE_SIZE / 2);
+		return std::make_pair(x, y + TILE_SIZE);
 	default:
 		break;
 	}

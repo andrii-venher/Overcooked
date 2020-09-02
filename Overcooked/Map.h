@@ -14,14 +14,12 @@ class Map
 	Texture texture;
 	const int width;
 	const int height;
-
-	enum class MapObjects { PLAYER, TABLE, FLOOR, CHECKOUT, TOMATO_DISPENSER };
-
 	MapObjects** tileMap;
 	std::list<TiledObject*>& objects;
 public:
 	Map(Texture& texture, std::list<TiledObject*>& _objects);
 	void draw(RenderWindow& rw);
 	Actions interact(int _x, int _y);
+	MapObjects** getMap();
 };
 

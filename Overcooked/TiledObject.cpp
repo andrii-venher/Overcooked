@@ -1,9 +1,5 @@
 #include "TiledObject.h"
 
-TiledObject::TiledObject()
-{
-}
-
 TiledObject::TiledObject(Texture& texture, float _x, float _y, int tileX, int tileY)
 {
 	sprite.setTexture(texture);

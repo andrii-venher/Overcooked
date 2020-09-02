@@ -16,7 +16,7 @@ class Player : public TiledObject
 	std::list<TiledObject*>& objects;
 public:
 	Player(Texture& texture, float _x, float _y, std::list<TiledObject*>& _objects);
-	void update(float time);
+	void update(float time, MapObjects** map);
 	void trackControls();
 	Sprite getSprite();
 	bool isSomethingInHands();

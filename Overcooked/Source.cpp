@@ -15,9 +15,9 @@ int main()
 
     std::list<TiledObject*> objects;
 
-    objects.push_back(new Tomato(t, 80, 80));
+   // objects.push_back(new Tomato(t, 80, 80));
 
-    Player player(t, 16, 16, objects);
+    Player player(t, 80, 80, objects);
 
     Map map(t, objects);
 
@@ -41,23 +41,25 @@ int main()
                     if (player.isSomethingInHands())
                     {
                         player.put();
+                        continue;
                     }
                     else
                     {
                         player.take();
                     }
-                }
-                else if (event.key.code == sf::Keyboard::C)
-                {
-                    if (map.interact(player.getNextPosition().first, player.getNextPosition().second) == Actions::TAKE)
+
+                    if (!player.isSomethingInHands())
                     {
-                        player.take();
+                        if (map.interact(player.getNextPosition().first, player.getNextPosition().second) == Actions::TAKE)
+                        {
+                            player.take();
+                        }
                     }
                 }
             }
         }
 
-        player.update(time);
+        player.update(time, map.getMap());
 
         window.clear();
         map.draw(window);
