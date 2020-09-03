@@ -10,6 +10,8 @@ Player::Player(Texture& texture, float _x, float _y, std::list<TiledObject*>& _o
 	ySpeed = 0;
 
 	inHands = nullptr;
+
+	type = ObjectTypes::PLAYER;
 }
 
 void Player::update(float time, MapObjects** map)
@@ -183,19 +185,34 @@ void Player::take()
 
 void Player::put()
 {
-	int objXTile = inHands->getSprite().getPosition().x / TILE_SIZE;
+	Vector2f pos = convertPosition(inHands);
+	pos.x *= TILE_SIZE;
+	pos.x += TILE_SIZE / 2;
+	pos.y *= TILE_SIZE;
+	pos.y += TILE_SIZE / 2;
+	/*int objXTile = inHands->getSprite().getPosition().x / TILE_SIZE;
 	objXTile *= TILE_SIZE;
 	objXTile += TILE_SIZE / 2;
 	int objYTile = inHands->getSprite().getPosition().y / TILE_SIZE;
 	objYTile *= TILE_SIZE;
 	objYTile += TILE_SIZE / 2;
-	Vector2f pos(objXTile, objYTile);
+	Vector2f pos(objXTile, objYTile);*/
 	for (auto obj : objects)
 	{
 		if (obj->getSprite().getPosition() == pos)
-			return;
+		{
+			if (obj->getType() == ObjectTypes::UTENSILS)
+			{
+				Utensils* utenObj = (Utensils*)obj;
+				if (utenObj->add(inHands))
+					inHands = nullptr;
+				return;
+			}
+			else
+				return;
+		}
 	}
-	inHands->setPosition(objXTile, objYTile);
+	inHands->setPosition(pos.x, pos.y);
 	objects.push_back(inHands);
 	inHands = nullptr;
 }
@@ -215,4 +232,9 @@ std::pair<int, int> Player::getNextPosition()
 	default:
 		break;
 	}
+}
+
+TiledObject* Player::clone()
+{
+	return new Player(*this);
 }

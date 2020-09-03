@@ -1,5 +1,27 @@
 #include "TiledObject.h"
 
+TiledObject::TiledObject(const TiledObject& obj)
+{
+	this->sprite = obj.sprite;
+	this->tileRect = obj.tileRect;
+	this->x = obj.x;
+	this->y = obj.y;
+}
+
+TiledObject::TiledObject(Texture& texture, int tileX, int tileY)
+{
+	sprite.setTexture(texture);
+
+	tileRect = { tileX * TILE_SIZE, tileY * TILE_SIZE, TILE_SIZE, TILE_SIZE };
+
+	sprite.setTextureRect(tileRect);
+
+	sprite.setOrigin(tileRect.width / 2, tileRect.height / 2);
+
+	x = 0;
+	y = 0;
+}
+
 TiledObject::TiledObject(Texture& texture, float _x, float _y, int tileX, int tileY)
 {
 	sprite.setTexture(texture);
@@ -32,7 +54,7 @@ IntRect TiledObject::getTileRect()
 
 Rotations TiledObject::getRotation()
 {
-	std::cout << (int)sprite.getRotation() << "\n";
+	//std::cout << (int)sprite.getRotation() << "\n";
 	switch ((int)sprite.getRotation())
 	{
 	case 90:
@@ -51,4 +73,9 @@ Rotations TiledObject::getRotation()
 void TiledObject::draw(RenderWindow& rw)
 {
 	rw.draw(sprite);
+}
+
+ObjectTypes TiledObject::getType()
+{
+	return type;
 }

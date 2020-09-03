@@ -1,6 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "TiledObject.h"
+#include "Utensils.h"
+#include "Utility.h"
 #include <list>
 #include <iostream>
 
@@ -24,5 +26,6 @@ public:
 	void take();
 	void put();
 	std::pair<int, int> getNextPosition();
+	TiledObject* clone() override;
 };
 

@@ -3,6 +3,8 @@
 #include "GameSettings.h"
 #include "TiledObject.h"
 #include "Food.h"
+#include "Utensils.h"
+#include "Utility.h"
 #include <list>
 #include <algorithm>
 
@@ -19,7 +21,9 @@ class Map
 public:
 	Map(Texture& texture, std::list<TiledObject*>& _objects);
 	void draw(RenderWindow& rw);
+	void update();
 	Actions interact(int _x, int _y);
+	Actions fabricate(int _x, int _y);
 	MapObjects** getMap();
 };
 

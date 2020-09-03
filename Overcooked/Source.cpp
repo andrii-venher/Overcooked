@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "Map.h"
 #include "Food.h"
+#include "Utensils.h"
 #include <list>
 
 using namespace sf;
@@ -13,9 +14,15 @@ int main()
     Texture t;
     t.loadFromFile("Images/tiles.png");
 
+    FoodFactory* f = new FoodFactory(t);
+
     std::list<TiledObject*> objects;
 
-   // objects.push_back(new Tomato(t, 80, 80));
+    objects.push_back(f->create(FoodTypes::TOMATO, 80, 80));
+
+    Utensils* pan = new Pan(t, 200, 200);
+
+    objects.push_back(pan);
 
     Player player(t, 80, 80, objects);
 
@@ -56,16 +63,31 @@ int main()
                         }
                     }
                 }
+                if (event.key.code == sf::Keyboard::Tab)
+                {
+                    map.fabricate(player.getNextPosition().first, player.getNextPosition().second);
+                }
             }
         }
 
         player.update(time, map.getMap());
+        map.update();
 
         window.clear();
         map.draw(window);
         for (TiledObject* obj : objects)
         {
             obj->draw(window);
+            switch (obj->getType())
+            {
+            case ObjectTypes::UTENSILS:
+            {
+                Utensils* utenObj = (Utensils*)obj;
+                utenObj->update(time);
+            }
+            default:
+                break;
+            }
         }
         player.draw(window);
         if (player.isSomethingInHands())
