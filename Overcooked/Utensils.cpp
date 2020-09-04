@@ -1,10 +1,22 @@
 #include "Utensils.h"
 
-Utensils::Utensils(const Utensils& food) : TiledObject(food) { type = ObjectTypes::UTENSILS; }
+Utensils::Utensils(const Utensils& food) : TiledObject(food)
+{
+	type = ObjectTypes::UTENSILS; 
+	readyBar.setFillColor(Color(0, 0, 0));
+}
 
-Utensils::Utensils(Texture& texture, int tileX, int tileY) : TiledObject(texture, tileX, tileY) { type = ObjectTypes::UTENSILS; }
+Utensils::Utensils(Texture& texture, int tileX, int tileY) : TiledObject(texture, tileX, tileY)
+{ 
+	type = ObjectTypes::UTENSILS;
+	readyBar.setFillColor(Color(0, 0, 0));
+}
 
-Utensils::Utensils(Texture& texture, float _x, float _y, int tileX, int tileY) : TiledObject(texture, _x, _y, tileX, tileY) { type = ObjectTypes::UTENSILS; }
+Utensils::Utensils(Texture& texture, float _x, float _y, int tileX, int tileY) : TiledObject(texture, _x, _y, tileX, tileY) 
+{
+	type = ObjectTypes::UTENSILS;
+	readyBar.setFillColor(Color(0, 0, 0));
+}
 
 bool Utensils::add(TiledObject* obj)
 {
@@ -33,17 +45,26 @@ void Utensils::setStove(bool _isOnStove)
 
 void Utensils::update(float time)
 {
-	if (isOnStove && filling.size() > 0)
-	{
-		readyTimer += time;
-	}
 	if (readyTimer > 500)
 	{
 		IntRect tileRect = getTileRect();
 		tileRect.left = 2 * TILE_SIZE;
 		tileRect.top = 2 * TILE_SIZE;
 		sprite.setTextureRect(tileRect);
+		return;
 	}
+	if (isOnStove && filling.size() > 0)
+	{
+		readyTimer += time;
+		readyBar.setSize(Vector2f(TILE_SIZE / (double)500 * readyTimer, 5));
+	}
+}
+
+void Utensils::draw(RenderWindow& rw)
+{
+	TiledObject::draw(rw);
+	readyBar.setPosition(sprite.getPosition().x - TILE_SIZE / 2, sprite.getPosition().y + TILE_SIZE / 2);
+	rw.draw(readyBar);
 }
 
 Pan::Pan(Texture& texture) : Utensils(texture, 0, 2) {}

@@ -9,6 +9,7 @@ protected:
 	std::list<Food*> filling;
 	int readyTimer = 0;
 	bool isOnStove = false;
+	RectangleShape readyBar;
 public:
 	Utensils(const Utensils& food);
 	Utensils(Texture& texture, int tileX, int tileY);
@@ -17,6 +18,7 @@ public:
 	int getFillingSize();
 	void setStove(bool _isOnStove);
 	void update(float time);
+	void draw(RenderWindow& rw) override;
 };
 
 class Pan : public Utensils

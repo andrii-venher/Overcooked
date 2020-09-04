@@ -23,7 +23,7 @@ public:
 	void setPosition(float _x, float _y);
 	IntRect getTileRect();
 	Rotations getRotation();
-	void draw(RenderWindow& rw);
+	virtual void draw(RenderWindow& rw);
 	virtual TiledObject* clone() = 0;
 	ObjectTypes getType();
 };
