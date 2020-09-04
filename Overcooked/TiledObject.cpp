@@ -47,6 +47,11 @@ void TiledObject::setPosition(float _x, float _y)
 	sprite.setPosition(_x, _y);
 }
 
+void TiledObject::setScale(float _factorX, float _factorY)
+{
+	sprite.setScale(Vector2f(_factorX, _factorY));
+}
+
 IntRect TiledObject::getTileRect()
 {
 	return tileRect;

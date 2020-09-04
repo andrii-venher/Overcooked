@@ -18,9 +18,9 @@ int main()
 
     std::list<TiledObject*> objects;
 
-    objects.push_back(f->create(FoodTypes::TOMATO, 80, 80));
+    //objects.push_back(f->create(FoodTypes::TOMATO, 80, 80));
 
-    Utensils* pan = new Pan(t, 200, 200);
+    Utensils* pan = new Pan(t, 80, 80);
 
     objects.push_back(pan);
 
@@ -90,10 +90,6 @@ int main()
             }
         }
         player.draw(window);
-        if (player.isSomethingInHands())
-        {
-            window.draw(player.getInHandsSprite());
-        }
         window.display();
     }
 

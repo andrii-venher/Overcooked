@@ -68,12 +68,12 @@ void Map::update()
 			Vector2f pos = convertPosition(utenObj);
 			if (tileMap[(int)pos.y][(int)pos.x] == MapObjects::STOVE)
 			{
-				utenObj->setStove(true);
+				utenObj->isOnStrove(true);
 				//std::cout << "TRUE\n";
 			}
 			else
 			{
-				utenObj->setStove(false);
+				utenObj->isOnStrove(false);
 				//std::cout << "FALSE\n";
 			}
 		}
@@ -125,7 +125,7 @@ Actions Map::fabricate(int _x, int _y)
 		{
 
 			Utensils* utenObj = (Utensils*)object;
-			switch (utenObj->getFillingSize())
+			switch (utenObj->getCapacity())
 			{
 			case 0:
 				std::cout << "empty!\n";

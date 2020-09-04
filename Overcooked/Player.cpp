@@ -238,3 +238,12 @@ TiledObject* Player::clone()
 {
 	return new Player(*this);
 }
+
+void Player::draw(RenderWindow& rw)
+{
+	TiledObject::draw(rw);
+	if (isSomethingInHands())
+	{
+		inHands->draw(rw);
+	}
+}

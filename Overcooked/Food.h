@@ -9,12 +9,17 @@ class Food : public TiledObject
 protected:
 	unsigned int cutCounter = 0;
 	virtual void changeTexture() = 0;
+	FoodTypes fType;
+	RectangleShape cutBar;
+	const int cutsNeeded = 3;
 public:
 	Food(const Food& food);
 	Food(Texture& texture, int tileX, int tileY);
 	Food(Texture& texture, float _x, float _y, int tileX, int tileY);
 	void cut();
 	bool isCut();
+	FoodTypes getFoodType();
+	void draw(RenderWindow& rw) override;
 };
 
 class Tomato : public Food

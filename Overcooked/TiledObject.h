@@ -21,6 +21,7 @@ public:
 	TiledObject(Texture& texture, float _x, float _y, int tileX, int tileY);
 	Sprite getSprite();
 	void setPosition(float _x, float _y);
+	void setScale(float _factorX, float _factorY);
 	IntRect getTileRect();
 	Rotations getRotation();
 	virtual void draw(RenderWindow& rw);
