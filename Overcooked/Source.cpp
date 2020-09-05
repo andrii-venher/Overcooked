@@ -20,7 +20,7 @@ int main()
 
     //objects.push_back(f->create(FoodTypes::TOMATO, 80, 80));
 
-    Utensils* pan = new Pan(t, 80, 80);
+    CookingUtensils* pan = new Pan(t, 48, 16);
 
     objects.push_back(pan);
 
@@ -82,7 +82,7 @@ int main()
             {
             case ObjectTypes::UTENSILS:
             {
-                Utensils* utenObj = (Utensils*)obj;
+                CookingUtensils* utenObj = (CookingUtensils*)obj;
                 utenObj->update(time);
             }
             default:

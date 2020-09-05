@@ -54,7 +54,7 @@ void Tomato::changeTexture()
 
 Tomato::Tomato(Texture& texture) : Tomato(texture, 0, 0) {}
 
-Tomato::Tomato(Texture& texture, float _x, float _y) : Food(texture, _x, _y, 1, 1) { fType = FoodTypes::TOMATO; }
+Tomato::Tomato(Texture& texture, float _x, float _y) : Food(texture, _x, _y, 1, 2) { fType = FoodTypes::TOMATO; }
 
 TiledObject* Tomato::clone()
 {

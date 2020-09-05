@@ -42,13 +42,13 @@ void Map::draw(RenderWindow& rw)
 			else if (tileMap[i][j] == MapObjects::CHECKOUT)
 				sprite.setTextureRect(IntRect(3 * TILE_SIZE, 0 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
 			else if(tileMap[i][j] == MapObjects::FLOOR)
-				sprite.setTextureRect(IntRect(4 * TILE_SIZE, 0 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
-			else if (tileMap[i][j] == MapObjects::TOMATO_DISPENSER)
-				sprite.setTextureRect(IntRect(0 * TILE_SIZE, 1 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
-			else if(tileMap[i][j] == MapObjects::CUTTING_BOARD)
 				sprite.setTextureRect(IntRect(1 * TILE_SIZE, 0 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+			else if (tileMap[i][j] == MapObjects::TOMATO_DISPENSER)
+				sprite.setTextureRect(IntRect(0 * TILE_SIZE, 2 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+			else if(tileMap[i][j] == MapObjects::CUTTING_BOARD)
+				sprite.setTextureRect(IntRect(4 * TILE_SIZE, 0 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
 			else if(tileMap[i][j] == MapObjects::STOVE)
-				sprite.setTextureRect(IntRect(0 * TILE_SIZE, 0 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+				sprite.setTextureRect(IntRect(5 * TILE_SIZE, 0 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
 				
 			sprite.setPosition(j * TILE_SIZE, i * TILE_SIZE);
 			rw.draw(sprite);
@@ -64,7 +64,7 @@ void Map::update()
 		{
 		case ObjectTypes::UTENSILS:
 		{
-			Utensils* utenObj = (Utensils*)obj;
+			CookingUtensils* utenObj = (CookingUtensils*)obj;
 			Vector2f pos = convertPosition(utenObj);
 			if (tileMap[(int)pos.y][(int)pos.x] == MapObjects::STOVE)
 			{
@@ -103,7 +103,7 @@ Actions Map::fabricate(int _x, int _y)
 	_x /= TILE_SIZE;
 	_y /= TILE_SIZE;
 
-	std::cout << _x << " " << _y << "\n";
+	//std::cout << _x << " " << _y << "\n";
 
 	for (auto obj : objects)
 	{
@@ -124,7 +124,7 @@ Actions Map::fabricate(int _x, int _y)
 		else if (tileMap[_y][_x] == MapObjects::STOVE && object->getType() == ObjectTypes::UTENSILS)
 		{
 
-			Utensils* utenObj = (Utensils*)object;
+			CookingUtensils* utenObj = (CookingUtensils*)object;
 			switch (utenObj->getCapacity())
 			{
 			case 0:

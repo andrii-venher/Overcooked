@@ -203,7 +203,7 @@ void Player::put()
 		{
 			if (obj->getType() == ObjectTypes::UTENSILS)
 			{
-				Utensils* utenObj = (Utensils*)obj;
+				Utensil* utenObj = (Utensil*)obj;
 				if (utenObj->add(inHands))
 					inHands = nullptr;
 				return;
@@ -228,7 +228,7 @@ std::pair<int, int> Player::getNextPosition()
 	case Rotations::RIGHT:
 		return std::make_pair(x + TILE_SIZE, y);
 	case Rotations::DOWN:
-		return std::make_pair(x, y + TILE_SIZE);
+		return std::make_pair(x, (int)y + TILE_SIZE);
 	default:
 		break;
 	}
