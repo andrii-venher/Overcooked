@@ -18,11 +18,12 @@ int main()
 
     std::list<TiledObject*> objects;
 
-    //objects.push_back(f->create(FoodTypes::TOMATO, 80, 80));
+    CookingUtensil* pan = new Pan(t, 48, 16);
 
-    CookingUtensils* pan = new Pan(t, 48, 16);
+    Plate* plate = new Plate(t, 80, 80);
 
     objects.push_back(pan);
+    objects.push_back(plate);
 
     Player player(t, 80, 80, objects);
 
@@ -82,8 +83,17 @@ int main()
             {
             case ObjectTypes::UTENSILS:
             {
-                CookingUtensils* utenObj = (CookingUtensils*)obj;
-                utenObj->update(time);
+                Utensil* utenObj = (Utensil*)obj;
+                if (utenObj->getUtensilType() == UtensilType::COOKING)
+                {
+                    CookingUtensil* cookingUtensil = (CookingUtensil*)utenObj;
+                    cookingUtensil->update(time);
+                }
+                else if (utenObj->getUtensilType() == UtensilType::PLATE)
+                {
+                    Plate* plateUtensil = (Plate*)utenObj;
+                    plate->update();
+                }
             }
             default:
                 break;

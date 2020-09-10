@@ -33,6 +33,17 @@ bool Food::isCut()
 	return (cutCounter >= cutsNeeded) ? true : false;
 }
 
+void Food::setCooked()
+{
+	cooked = true;
+	changeTexture();
+}
+
+bool Food::isCooked()
+{
+	return (cooked) ? true : false;
+}
+
 FoodTypes Food::getFoodType()
 {
 	return fType;
@@ -47,9 +58,14 @@ void Food::draw(RenderWindow& rw)
 
 void Tomato::changeTexture()
 {
-	IntRect tileRect = getTileRect();
-	tileRect.left = 2 * TILE_SIZE;
-	sprite.setTextureRect(tileRect);
+	if (isCooked())
+	{
+		sprite.setTextureRect(IntRect(3 * TILE_SIZE, 2 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+	}
+	else if (isCut())
+	{
+		sprite.setTextureRect(IntRect(2 * TILE_SIZE, 2 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+	}
 }
 
 Tomato::Tomato(Texture& texture) : Tomato(texture, 0, 0) {}

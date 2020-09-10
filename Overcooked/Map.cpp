@@ -17,7 +17,7 @@ Map::Map(Texture& _texture, std::list<TiledObject*>& _objects) : width(10), heig
 		{
 			if (i == 0 && j == 1)
 				tileMap[i][j] = MapObjects::STOVE;
-			else if (i == 0 && j == 7)
+			else if (i == 0 && j == 3)
 				tileMap[i][j] = MapObjects::CUTTING_BOARD;
 			else if (i == 0 && j == 2)
 				tileMap[i][j] = MapObjects::TOMATO_DISPENSER;
@@ -64,17 +64,15 @@ void Map::update()
 		{
 		case ObjectTypes::UTENSILS:
 		{
-			CookingUtensils* utenObj = (CookingUtensils*)obj;
+			CookingUtensil* utenObj = (CookingUtensil*)obj;
 			Vector2f pos = convertPosition(utenObj);
 			if (tileMap[(int)pos.y][(int)pos.x] == MapObjects::STOVE)
 			{
 				utenObj->isOnStrove(true);
-				//std::cout << "TRUE\n";
 			}
 			else
 			{
 				utenObj->isOnStrove(false);
-				//std::cout << "FALSE\n";
 			}
 		}
 		default:
@@ -87,7 +85,6 @@ Actions Map::interact(int _x, int _y)
 {
 	_x /= TILE_SIZE;
 	_y /= TILE_SIZE;
-	//std::cout << _x << " " << _y << "\n";
 	if (tileMap[_y][_x] == MapObjects::TOMATO_DISPENSER)
 	{
 		objects.push_back(new Tomato(texture, _x * TILE_SIZE + TILE_SIZE / 2, _y * TILE_SIZE  + TILE_SIZE / 2));
@@ -102,8 +99,6 @@ Actions Map::fabricate(int _x, int _y)
 	TiledObject* object = nullptr;
 	_x /= TILE_SIZE;
 	_y /= TILE_SIZE;
-
-	//std::cout << _x << " " << _y << "\n";
 
 	for (auto obj : objects)
 	{
@@ -121,36 +116,7 @@ Actions Map::fabricate(int _x, int _y)
 			Food* foodObj = (Food*)object;
 			foodObj->cut();
 		}
-		else if (tileMap[_y][_x] == MapObjects::STOVE && object->getType() == ObjectTypes::UTENSILS)
-		{
-
-			CookingUtensils* utenObj = (CookingUtensils*)object;
-			switch (utenObj->getCapacity())
-			{
-			case 0:
-				std::cout << "empty!\n";
-				break;
-			case 1:
-				std::cout << "1 filling!\n";
-				break;
-			case 2:
-				std::cout << "2 filling!\n";
-				break;
-			case 3:
-				std::cout << "3 filling!\n";
-				break;
-			default:
-				break;
-			}
-			//Vector2f pos = utenObj->getSprite().getPosition();
-			//int _x = pos.x / TILE_SIZE;
-			//int _y = pos.y / TILE_SIZE;
-			
-			//std::cout << "Successful cooking!\n";
-		}
 	}
-
-	//std::cout << _x << " " << _y << "\n";
 	
 	return Actions::WAIT;
 }

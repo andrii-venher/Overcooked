@@ -204,8 +204,17 @@ void Player::put()
 			if (obj->getType() == ObjectTypes::UTENSILS)
 			{
 				Utensil* utenObj = (Utensil*)obj;
-				if (utenObj->add(inHands))
-					inHands = nullptr;
+				if (inHands->getType() == ObjectTypes::UTENSILS)
+				{
+					Utensil* inHandsUtensil = (Utensil*)inHands;
+					inHandsUtensil->moveToUtensil(utenObj);
+					return;
+				}
+				else
+				{
+					if (utenObj->add(inHands))
+						inHands = nullptr;
+				}
 				return;
 			}
 			else

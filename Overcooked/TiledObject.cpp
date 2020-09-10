@@ -59,7 +59,6 @@ IntRect TiledObject::getTileRect()
 
 Rotations TiledObject::getRotation()
 {
-	//std::cout << (int)sprite.getRotation() << "\n";
 	switch ((int)sprite.getRotation())
 	{
 	case 90:
