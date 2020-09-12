@@ -243,11 +243,6 @@ std::pair<int, int> Player::getNextPosition()
 	}
 }
 
-TiledObject* Player::clone()
-{
-	return new Player(*this);
-}
-
 void Player::draw(RenderWindow& rw)
 {
 	TiledObject::draw(rw);

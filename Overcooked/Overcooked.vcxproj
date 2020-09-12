@@ -153,6 +153,7 @@
   <ItemGroup>
     <ClCompile Include="Food.cpp" />
     <ClCompile Include="Map.cpp" />
+    <ClCompile Include="Order.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="TiledObject.cpp" />
@@ -163,6 +164,7 @@
     <ClInclude Include="Food.h" />
     <ClInclude Include="GameSettings.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="Order.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="TiledObject.h" />
     <ClInclude Include="Utensils.h" />

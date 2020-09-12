@@ -3,6 +3,7 @@
 #include "Map.h"
 #include "Food.h"
 #include "Utensils.h"
+#include "Order.h"
 #include <list>
 
 using namespace sf;
@@ -14,9 +15,7 @@ int main()
     Texture t;
     t.loadFromFile("Images/tiles.png");
 
-    FoodFactory* f = new FoodFactory(t);
-
-    std::list<TiledObject*> objects;
+   /* std::list<TiledObject*> objects;
 
     CookingUtensil* pan = new Pan(t, 48, 16);
 
@@ -27,8 +26,16 @@ int main()
 
     Player player(t, 80, 80, objects);
 
-    Map map(t, objects);
+    Map map(t, objects);*/
 
+    Order* order1 = new TomatoSoupOrder(t);
+
+    Order* order2 = new TomatoSoupOrder(t);
+
+    OrderQueue queue;
+    queue.add(order1);
+    queue.add(order2);
+    queue.setPosition(50, 70);
     Clock clock;
 
     while (window.isOpen())
@@ -44,7 +51,7 @@ int main()
                 window.close();
             if (event.type == sf::Event::KeyPressed)
             {
-                if (event.key.code == sf::Keyboard::Space)
+                /*if (event.key.code == sf::Keyboard::Space)
                 {
                     if (player.isSomethingInHands())
                     {
@@ -67,16 +74,16 @@ int main()
                 if (event.key.code == sf::Keyboard::Tab)
                 {
                     map.fabricate(player.getNextPosition().first, player.getNextPosition().second);
-                }
+                }*/
             }
         }
 
-        player.update(time, map.getMap());
-        map.update();
+        //player.update(time, map.getMap());
+        //map.update();
 
         window.clear();
-        map.draw(window);
-        for (TiledObject* obj : objects)
+        //map.draw(window);
+       /* for (TiledObject* obj : objects)
         {
             obj->draw(window);
             switch (obj->getType())
@@ -99,7 +106,9 @@ int main()
                 break;
             }
         }
-        player.draw(window);
+        player.draw(window);*/
+        queue.update(time);
+        queue.draw(window);
         window.display();
     }
 

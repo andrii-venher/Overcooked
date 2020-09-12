@@ -25,7 +25,6 @@ public:
 	IntRect getTileRect();
 	Rotations getRotation();
 	virtual void draw(RenderWindow& rw);
-	virtual TiledObject* clone() = 0;
 	ObjectTypes getType();
 };
 

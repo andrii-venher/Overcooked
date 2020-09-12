@@ -31,14 +31,4 @@ class Tomato : public Food
 public:
 	Tomato(Texture& texture);
 	Tomato(Texture& texture, float _x, float _y);
-	TiledObject* clone() override;
-};
-
-class FoodFactory
-{
-	std::unordered_map<FoodTypes, TiledObject*> prototypes;
-public:
-	FoodFactory(Texture& t);
-	~FoodFactory();
-	TiledObject* create(FoodTypes type, float _x, float _y);
 };

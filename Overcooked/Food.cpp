@@ -72,24 +72,4 @@ Tomato::Tomato(Texture& texture) : Tomato(texture, 0, 0) {}
 
 Tomato::Tomato(Texture& texture, float _x, float _y) : Food(texture, _x, _y, 1, 2) { fType = FoodTypes::TOMATO; }
 
-TiledObject* Tomato::clone()
-{
-	return new Tomato(*this);
-}
 
-FoodFactory::FoodFactory(Texture& t)
-{
-	prototypes[FoodTypes::TOMATO] = new Tomato(t);
-}
-
-FoodFactory::~FoodFactory()
-{
-	delete prototypes[FoodTypes::TOMATO];	
-}
-
-TiledObject* FoodFactory::create(FoodTypes type, float _x = 0, float _y = 0)
-{
-	TiledObject* obj = prototypes[type]->clone();
-	obj->setPosition(_x, _y);
-	return obj;
-}

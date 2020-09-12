@@ -178,11 +178,6 @@ Pan::Pan(Texture& texture) : CookingUtensil(texture, 2, 1) {}
 
 Pan::Pan(Texture& texture, float _x, float _y) : CookingUtensil(texture, _x, _y, 2, 1) {}
 
-TiledObject* Pan::clone()
-{
-	return new Pan(*this);
-}
-
 void Plate::changeTexture()
 {
 	if (!isFoodEqualInFilling())
@@ -218,11 +213,6 @@ Plate::Plate(Texture& texture) : Plate(texture, 0, 1)
 Plate::Plate(Texture& texture, float _x, float _y) : Utensil(texture, _x, _y, 0, 1)
 {
 	utensilType = UtensilType::PLATE;
-}
-
-TiledObject* Plate::clone()
-{
-	return new Plate(*this);
 }
 
 bool Plate::add(TiledObject* obj)

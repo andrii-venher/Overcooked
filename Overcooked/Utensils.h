@@ -48,7 +48,6 @@ class Plate : public Utensil
 public:
 	Plate(Texture& texture);
 	Plate(Texture& texture, float _x, float _y);
-	TiledObject* clone() override;
 	bool add(TiledObject* obj) override;
 	void draw(RenderWindow& rw) override;
 	void update();
@@ -61,6 +60,5 @@ class Pan : public CookingUtensil
 public:
 	Pan(Texture& texture);
 	Pan(Texture& texture, float _x, float _y);
-	TiledObject* clone() override;
 };
 

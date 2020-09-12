@@ -26,7 +26,6 @@ public:
 	void take();
 	void put();
 	std::pair<int, int> getNextPosition();
-	TiledObject* clone() override;
 	void draw(RenderWindow& rw) override;
 };
 
