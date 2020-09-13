@@ -14,12 +14,7 @@ void Order::resetFieldsPosition()
 	}
 }
 
-void Order::setOrderTime(int _time)
-{
-	orderTime = _time;
-}
-
-Order::Order(Texture& t, int _capacity)
+Order::Order(Texture& t)
 {
 	timerBar.setFillColor(Color(255, 0, 0));
 	outer.setFillColor(Color(255, 216, 0));
@@ -32,6 +27,11 @@ Order::Order(Texture& t, int _capacity)
 bool Order::isValid()
 {
 	return (timer < orderTime) ? true : false;
+}
+
+void Order::complete()
+{
+	timer = orderTime;
 }
 
 void Order::update(float time)
@@ -83,17 +83,6 @@ std::list<Food*> Order::getList()
 Vector2f Order::getPosition()
 {
 	return Vector2f(x, y);
-}
-
-TomatoSoupOrder::TomatoSoupOrder(Texture& t) : Order(t, 3)
-{
-	foodList.push_back(new Tomato(t));
-	foodList.push_back(new Tomato(t));
-	foodList.push_back(new Tomato(t));
-	for (auto it = std::begin(foodList); it != std::end(foodList); it++)
-	{
-		(*it)->setCooked();
-	}
 }
 
 void OrderQueue::resetPosition(Order* order)
@@ -160,16 +149,40 @@ void OrderQueue::setPosition(float _x, float _y)
 	}
 }
 
-//TomatoSoupOrder1::TomatoSoupOrder1(Texture& t) : Order(t, 3)
-//{
-//	foodList.push_back(new Tomato(t));
-//	foodList.push_back(new Tomato(t));
-//	foodList.push_back(new Tomato(t));
-//
-//	for (auto it = std::begin(foodList); it != std::end(foodList); it++)
-//	{
-//		(*it)->setCooked();
-//	}
-//
-//	setOrderTime(10000);
-//}
+std::list<Order*> OrderQueue::getOrders()
+{
+	return queue;
+}
+
+TomatoSoupOrder::TomatoSoupOrder(Texture& t) : Order(t)
+{
+	foodList.push_back(new Tomato(t));
+	foodList.push_back(new Tomato(t));
+	foodList.push_back(new Tomato(t));
+	for (auto it = std::begin(foodList); it != std::end(foodList); it++)
+	{
+		(*it)->setCooked();
+	}
+}
+
+MushroomSoupOrder::MushroomSoupOrder(Texture& t) : Order(t)
+{
+	foodList.push_back(new Mushroom(t));
+	foodList.push_back(new Mushroom(t));
+	foodList.push_back(new Mushroom(t));
+	for (auto it = std::begin(foodList); it != std::end(foodList); it++)
+	{
+		(*it)->setCooked();
+	}
+}
+
+OnionSoupOrder::OnionSoupOrder(Texture& t) : Order(t)
+{
+	foodList.push_back(new Onion(t));
+	foodList.push_back(new Onion(t));
+	foodList.push_back(new Onion(t));
+	for (auto it = std::begin(foodList); it != std::end(foodList); it++)
+	{
+		(*it)->setCooked();
+	}
+}

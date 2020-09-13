@@ -29,6 +29,14 @@ Utensil::Utensil(Texture& texture, float _x, float _y, int tileX, int tileY) : T
 	type = ObjectTypes::UTENSILS;
 }
 
+Utensil::~Utensil()
+{
+	for (auto food : filling)
+	{
+		delete food;
+	}
+}
+
 CookingUtensil::CookingUtensil(const CookingUtensil& cookingUtensils) : Utensil(cookingUtensils)
 {
 	readyBar.setFillColor(Color(255, 0, 0));
@@ -46,36 +54,26 @@ int Utensil::getCapacity()
 	return filling.size();
 }
 
-void Utensil::moveToUtensil(Utensil* utenObj)
+void Utensil::moveToUtensil(Utensil* utensil)
 {
 	if (getCapacity())
 	{
 		std::vector<std::list<Food*>::iterator> removedElements;
 		for (auto it = std::begin(filling); it != std::end(filling); it++)
 		{
-			if (utenObj->add(*it))
+			if (utensil->add(*it))
 				removedElements.push_back(it);
 		}
-		/*int count = 0;
-		auto end = std::remove_if(std::begin(filling), std::end(filling),
-			[count, removedElements]() mutable
-			{
-				if (removedElements[count++])
-					return true;
-				return false;
-			});*/
 		for (int i = 0; i < removedElements.size(); i++)
 		{
 			filling.erase(removedElements[i]);
 		}
-		//filling.erase(end, std::end(filling));
-		/*for (const auto& foodObj : filling)
-		{
-			if (utenObj->add(foodObj))
-				filling.remove(foodObj);
-		}*/
-		//filling.erase(std::begin(filling), std::end(filling));
 	}
+}
+
+void Utensil::clear()
+{
+	filling.clear();
 }
 
 UtensilType Utensil::getUtensilType()
@@ -83,9 +81,14 @@ UtensilType Utensil::getUtensilType()
 	return utensilType;
 }
 
-void CookingUtensil::isOnStrove(bool _isOnStove)
+void CookingUtensil::onStove()
 {
-	isOnStove = _isOnStove;
+	stove = true;
+}
+
+void CookingUtensil::offStove()
+{
+	stove = false;
 }
 
 void CookingUtensil::update(float time)
@@ -112,7 +115,7 @@ void CookingUtensil::update(float time)
 		setStandartTexture();
 		readyBar.setFillColor(Color(255, 0, 0));
 	}
-	if (isOnStove)
+	if (stove)
 	{
 		readyTimer += time;
 		readyBar.setSize(Vector2f(TILE_SIZE / ((double)readyTime * getCapacity()) * readyTimer, 5));
@@ -131,7 +134,7 @@ void CookingUtensil::draw(RenderWindow& rw)
 		shift += TILE_SIZE / maxCapacity / 2;
 		(*it)->draw(rw);
 	}
-	readyBar.setPosition(sprite.getPosition().x - TILE_SIZE / 2, sprite.getPosition().y + TILE_SIZE / 2);
+	readyBar.setPosition(sprite.getPosition().x - TILE_SIZE / 2, sprite.getPosition().y + TILE_SIZE / 2 - 5);
 	rw.draw(readyBar);
 }
 
@@ -162,6 +165,10 @@ void Pan::changeTexture()
 		{
 		case FoodTypes::TOMATO:
 			sprite.setTextureRect(IntRect(7 * TILE_SIZE, 2 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+		case FoodTypes::MUSHROOM:
+			sprite.setTextureRect(IntRect(7 * TILE_SIZE, 3 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+		case FoodTypes::ONION:
+			sprite.setTextureRect(IntRect(7 * TILE_SIZE, 4 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
 		default:
 			break;
 		}
@@ -196,6 +203,24 @@ void Plate::changeTexture()
 		else
 			sprite.setTextureRect(IntRect(4 * TILE_SIZE, 2 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
 		break;
+	case FoodTypes::MUSHROOM:
+
+		if (filling.front()->isCooked())
+			sprite.setTextureRect(IntRect(6 * TILE_SIZE, 3 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+		else if (filling.front()->isCut())
+			sprite.setTextureRect(IntRect(5 * TILE_SIZE, 3 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+		else
+			sprite.setTextureRect(IntRect(4 * TILE_SIZE, 3 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+		break;
+	case FoodTypes::ONION:
+
+		if (filling.front()->isCooked())
+			sprite.setTextureRect(IntRect(6 * TILE_SIZE, 4 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+		else if (filling.front()->isCut())
+			sprite.setTextureRect(IntRect(5 * TILE_SIZE, 4 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+		else
+			sprite.setTextureRect(IntRect(4 * TILE_SIZE, 4 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+		break;
 	default:
 		break;
 	}
@@ -206,9 +231,7 @@ void Plate::setStandartTexture()
 	sprite.setTextureRect(IntRect(0 * TILE_SIZE, 1 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
 }
 
-Plate::Plate(Texture& texture) : Plate(texture, 0, 1)
-{
-}
+Plate::Plate(Texture& texture) : Plate(texture, 0, 1) {}
 
 Plate::Plate(Texture& texture, float _x, float _y) : Utensil(texture, _x, _y, 0, 1)
 {
@@ -250,4 +273,24 @@ void Plate::update()
 	{
 		setStandartTexture();
 	}
+}
+
+void Plate::onCheckout()
+{
+	checkout = true;
+}
+
+void Plate::offCheckout()
+{
+	checkout = false;
+}
+
+bool Plate::isOnCheckout()
+{
+	return checkout;
+}
+
+std::list<Food*> Plate::getList()
+{
+	return filling;
 }

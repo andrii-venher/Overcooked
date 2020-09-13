@@ -11,18 +11,16 @@ protected:
 	float y = 0;
 	std::list<Food*> foodList;
 	float timer = 0;
-	int orderTime = 100000;
+	int orderTime = 10000000;
 	RectangleShape timerBar;
 	int height = TILE_SIZE + 6;
 	int width = TILE_SIZE * 3 + 6;
-	int capacity;
 	RectangleShape outer;
 	RectangleShape inner;
-
-	void setOrderTime(int _time);
 public:
-	Order(Texture& t, int _capacity);
+	Order(Texture& t);
 	bool isValid();
+	void complete();
 	void update(float time);
 	void draw(RenderWindow& rw);
 	void setPosition(float _x, float _y);
@@ -43,6 +41,7 @@ public:
 	void update(float time);
 	void draw(RenderWindow& rw);
 	void setPosition(float _x, float _y);
+	std::list<Order*> getOrders();
 };
 
 class TomatoSoupOrder : public Order
@@ -51,9 +50,16 @@ public:
 	TomatoSoupOrder(Texture& t);
 };
 
-//class TomatoSoupOrder1 : public Order
-//{
-//public:
-//	TomatoSoupOrder1(Texture& t);
-//};
+class MushroomSoupOrder : public Order
+{
+public:
+	MushroomSoupOrder(Texture& t);
+};
+
+class OnionSoupOrder : public Order
+{
+public:
+	OnionSoupOrder(Texture& t);
+};
+
 

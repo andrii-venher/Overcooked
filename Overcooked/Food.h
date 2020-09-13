@@ -2,7 +2,7 @@
 #include "TiledObject.h"
 #include <unordered_map>
 
-enum class FoodTypes { TOMATO };
+enum class FoodTypes { TOMATO, MUSHROOM, ONION };
 
 class Food : public TiledObject
 {
@@ -31,4 +31,20 @@ class Tomato : public Food
 public:
 	Tomato(Texture& texture);
 	Tomato(Texture& texture, float _x, float _y);
+};
+
+class Mushroom : public Food
+{
+	void changeTexture() override;
+public:
+	Mushroom(Texture& texture);
+	Mushroom(Texture& texture, float _x, float _y);
+};
+
+class Onion : public Food
+{
+	void changeTexture() override;
+public:
+	Onion(Texture& texture);
+	Onion(Texture& texture, float _x, float _y);
 };

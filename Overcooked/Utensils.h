@@ -18,9 +18,11 @@ public:
 	Utensil(const Utensil& utensils);
 	Utensil(Texture& texture, int tileX, int tileY);
 	Utensil(Texture& texture, float _x, float _y, int tileX, int tileY);
+	~Utensil();
 	virtual bool add(TiledObject* obj) = 0;
 	int getCapacity();
-	void moveToUtensil(Utensil* utenObj);
+	void moveToUtensil(Utensil* utensil);
+	void clear();
 	UtensilType getUtensilType();
 };
 
@@ -28,14 +30,15 @@ class CookingUtensil : public Utensil
 {
 protected:
 	int readyTimer = 0;
-	bool isOnStove = false;
+	bool stove = false;
 	RectangleShape readyBar;
 	const int readyTime = 1000;
 public:
 	CookingUtensil(const CookingUtensil& cookingUtensils);
 	CookingUtensil(Texture& texture, int tileX, int tileY);
 	CookingUtensil(Texture& texture, float _x, float _y, int tileX, int tileY);
-	void isOnStrove(bool _isOnStove);
+	void onStove();
+	void offStove();
 	void update(float time);
 	void draw(RenderWindow& rw) override;
 	bool add(TiledObject* obj) override;
@@ -45,12 +48,17 @@ class Plate : public Utensil
 {
 	void changeTexture() override;
 	void setStandartTexture() override;
+	bool checkout = false;
 public:
 	Plate(Texture& texture);
 	Plate(Texture& texture, float _x, float _y);
 	bool add(TiledObject* obj) override;
 	void draw(RenderWindow& rw) override;
 	void update();
+	void onCheckout();
+	void offCheckout();
+	bool isOnCheckout();
+	std::list<Food*> getList();
 };
 
 class Pan : public CookingUtensil

@@ -21,36 +21,40 @@ void Player::update(float time, MapObjects** map)
 	switch (state)
 	{
 	case Player::States::LEFT:
+		sprite.setRotation(90);
 		if (map[getNextPosition().second / TILE_SIZE][(getNextPosition().first + TILE_SIZE / 2) / TILE_SIZE] == MapObjects::FLOOR)
 			xSpeed = -0.1;
 		else
 			xSpeed = 0;
 		ySpeed = 0;
-		sprite.setRotation(90);
+		
 		break;
 	case Player::States::UP:
+		sprite.setRotation(180);
 		if (map[(getNextPosition().second + TILE_SIZE / 2) / TILE_SIZE][getNextPosition().first / TILE_SIZE] == MapObjects::FLOOR)
 			ySpeed = -0.1;
 		else
 			ySpeed = 0;
 		xSpeed = 0;
-		sprite.setRotation(180);
+		
 		break;
 	case Player::States::RIGHT:
+		sprite.setRotation(270);
 		if (map[getNextPosition().second / TILE_SIZE][(getNextPosition().first - TILE_SIZE / 2) / TILE_SIZE] == MapObjects::FLOOR)
 			xSpeed = 0.1;
 		else
 			xSpeed = 0;
 		ySpeed = 0;
-		sprite.setRotation(270);
+		
 		break;
 	case Player::States::DOWN:
+		sprite.setRotation(0);
 		if (map[(getNextPosition().second - TILE_SIZE / 2) / TILE_SIZE][getNextPosition().first / TILE_SIZE] == MapObjects::FLOOR)
 			ySpeed = 0.1;
 		else
 			ySpeed = 0;
 		xSpeed = 0;
-		sprite.setRotation(0);
+	
 		break;
 	case Player::States::STAY:
 		xSpeed = ySpeed = 0;
@@ -185,34 +189,27 @@ void Player::take()
 
 void Player::put()
 {
-	Vector2f pos = convertPosition(inHands);
+	Vector2f pos(mapPosition(inHands).x, mapPosition(inHands).y);
 	pos.x *= TILE_SIZE;
 	pos.x += TILE_SIZE / 2;
 	pos.y *= TILE_SIZE;
 	pos.y += TILE_SIZE / 2;
-	/*int objXTile = inHands->getSprite().getPosition().x / TILE_SIZE;
-	objXTile *= TILE_SIZE;
-	objXTile += TILE_SIZE / 2;
-	int objYTile = inHands->getSprite().getPosition().y / TILE_SIZE;
-	objYTile *= TILE_SIZE;
-	objYTile += TILE_SIZE / 2;
-	Vector2f pos(objXTile, objYTile);*/
 	for (auto obj : objects)
 	{
 		if (obj->getSprite().getPosition() == pos)
 		{
 			if (obj->getType() == ObjectTypes::UTENSILS)
 			{
-				Utensil* utenObj = (Utensil*)obj;
+				Utensil* utensil = (Utensil*)obj;
 				if (inHands->getType() == ObjectTypes::UTENSILS)
 				{
 					Utensil* inHandsUtensil = (Utensil*)inHands;
-					inHandsUtensil->moveToUtensil(utenObj);
+					inHandsUtensil->moveToUtensil(utensil);
 					return;
 				}
 				else
 				{
-					if (utenObj->add(inHands))
+					if (utensil->add(inHands))
 						inHands = nullptr;
 				}
 				return;

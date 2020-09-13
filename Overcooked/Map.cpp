@@ -1,34 +1,65 @@
 #include "Map.h"
 
-Map::Map(Texture& _texture, std::list<TiledObject*>& _objects) : width(10), height(10), objects(_objects)
+Map::Map(Texture& _texture, std::list<TiledObject*>& _objects) : objects(_objects)
 {
 	sprite.setTexture(_texture);
 	texture = _texture;
 
-	tileMap = new MapObjects * [width];
+	map = new MapObjects * [height];
+
+	std::ifstream file("Levels/level1.map");
 
 	for (int i = 0; i < height; i++)
 	{
-		tileMap[i] = new MapObjects[width];
+		map[i] = new MapObjects[width];
 	}
-	for (int i = 0; i < height; i++)
+	char ch;
+	int i = 0;
+	int j = 0;
+	while (!file.eof())
 	{
-		for (int j = 0; j < width; j++)
+		file.read(&ch, 1);
+		if (file.eof())
+			break;
+		switch (ch)
 		{
-			if (i == 0 && j == 1)
-				tileMap[i][j] = MapObjects::STOVE;
-			else if (i == 0 && j == 3)
-				tileMap[i][j] = MapObjects::CUTTING_BOARD;
-			else if (i == 0 && j == 2)
-				tileMap[i][j] = MapObjects::TOMATO_DISPENSER;
-			else if (i == 0 && j == 5)
-				tileMap[i][j] = MapObjects::CHECKOUT;
-			else if (i == 0 || j == 0 || i == height - 1 || j == width - 1)
-				tileMap[i][j] = MapObjects::TABLE;
-			else
-				tileMap[i][j] = MapObjects::FLOOR;
+		case '1':
+			map[i][j] = MapObjects::TABLE;
+			break;
+		case '0':
+			map[i][j] = MapObjects::FLOOR;
+			break;
+		case 'c':
+			map[i][j] = MapObjects::CHECKOUT;
+			break;
+		case 'b':
+			map[i][j] = MapObjects::CUTTING_BOARD;
+			break;
+		case 's':
+			map[i][j] = MapObjects::STOVE;
+			break;
+		case 't':
+			map[i][j] = MapObjects::TOMATO_DISPENSER;
+			break;
+		case 'm':
+			map[i][j] = MapObjects::MUSHROOM_DISPENCER;
+			break;
+		case 'o':
+			map[i][j] = MapObjects::ONION_DISPENCER;
+			break;	
+		case 'T':
+			map[i][j] = MapObjects::TRASH;
+			break;
+		case '\n':
+			i++;
+			j = 0;
+			continue;
+		default:
+			break;
 		}
+		j++;
 	}
+	file.close();
 }
 
 void Map::draw(RenderWindow& rw)
@@ -37,18 +68,24 @@ void Map::draw(RenderWindow& rw)
 	{
 		for (int j = 0; j < width; j++)
 		{
-			if (tileMap[i][j] == MapObjects::TABLE)
-				sprite.setTextureRect(IntRect(2 * TILE_SIZE, 0 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
-			else if (tileMap[i][j] == MapObjects::CHECKOUT)
-				sprite.setTextureRect(IntRect(3 * TILE_SIZE, 0 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
-			else if(tileMap[i][j] == MapObjects::FLOOR)
+			if (map[i][j] == MapObjects::FLOOR)
 				sprite.setTextureRect(IntRect(1 * TILE_SIZE, 0 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
-			else if (tileMap[i][j] == MapObjects::TOMATO_DISPENSER)
-				sprite.setTextureRect(IntRect(0 * TILE_SIZE, 2 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
-			else if(tileMap[i][j] == MapObjects::CUTTING_BOARD)
+			else if (map[i][j] == MapObjects::TABLE)
+				sprite.setTextureRect(IntRect(2 * TILE_SIZE, 0 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+			else if (map[i][j] == MapObjects::CHECKOUT)
+				sprite.setTextureRect(IntRect(3 * TILE_SIZE, 0 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+			else if (map[i][j] == MapObjects::CUTTING_BOARD)
 				sprite.setTextureRect(IntRect(4 * TILE_SIZE, 0 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
-			else if(tileMap[i][j] == MapObjects::STOVE)
+			else if(map[i][j] == MapObjects::STOVE)
 				sprite.setTextureRect(IntRect(5 * TILE_SIZE, 0 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+			else if(map[i][j] == MapObjects::TRASH)
+				sprite.setTextureRect(IntRect(6 * TILE_SIZE, 0 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+			else if (map[i][j] == MapObjects::TOMATO_DISPENSER)
+				sprite.setTextureRect(IntRect(0 * TILE_SIZE, 2 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+			else if(map[i][j] == MapObjects::MUSHROOM_DISPENCER)
+				sprite.setTextureRect(IntRect(0 * TILE_SIZE, 3 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+			else if (map[i][j] == MapObjects::ONION_DISPENCER)
+				sprite.setTextureRect(IntRect(0 * TILE_SIZE, 4 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
 				
 			sprite.setPosition(j * TILE_SIZE, i * TILE_SIZE);
 			rw.draw(sprite);
@@ -58,36 +95,29 @@ void Map::draw(RenderWindow& rw)
 
 void Map::update()
 {
-	for(auto obj : objects)
+	/*for(auto obj : objects)
 	{
-		switch (obj->getType())
-		{
-		case ObjectTypes::UTENSILS:
-		{
-			CookingUtensil* utenObj = (CookingUtensil*)obj;
-			Vector2f pos = convertPosition(utenObj);
-			if (tileMap[(int)pos.y][(int)pos.x] == MapObjects::STOVE)
-			{
-				utenObj->isOnStrove(true);
-			}
-			else
-			{
-				utenObj->isOnStrove(false);
-			}
-		}
-		default:
-			break;
-		}
-	}
+		
+	}*/
 }
 
 Actions Map::interact(int _x, int _y)
 {
 	_x /= TILE_SIZE;
 	_y /= TILE_SIZE;
-	if (tileMap[_y][_x] == MapObjects::TOMATO_DISPENSER)
+	if (map[_y][_x] == MapObjects::TOMATO_DISPENSER)
 	{
 		objects.push_back(new Tomato(texture, _x * TILE_SIZE + TILE_SIZE / 2, _y * TILE_SIZE  + TILE_SIZE / 2));
+		return Actions::TAKE;
+	}
+	else if (map[_y][_x] == MapObjects::MUSHROOM_DISPENCER)
+	{
+		objects.push_back(new Mushroom(texture, _x * TILE_SIZE + TILE_SIZE / 2, _y * TILE_SIZE + TILE_SIZE / 2));
+		return Actions::TAKE;
+	}
+	else if (map[_y][_x] == MapObjects::ONION_DISPENCER)
+	{
+		objects.push_back(new Onion(texture, _x * TILE_SIZE + TILE_SIZE / 2, _y * TILE_SIZE + TILE_SIZE / 2));
 		return Actions::TAKE;
 	}
 	return Actions::WAIT;
@@ -111,7 +141,7 @@ Actions Map::fabricate(int _x, int _y)
 
 	if (object)
 	{
-		if (tileMap[_y][_x] == MapObjects::CUTTING_BOARD && object->getType() == ObjectTypes::FOOD)
+		if (map[_y][_x] == MapObjects::CUTTING_BOARD && object->getType() == ObjectTypes::FOOD)
 		{
 			Food* foodObj = (Food*)object;
 			foodObj->cut();
@@ -123,5 +153,20 @@ Actions Map::fabricate(int _x, int _y)
 
 MapObjects** Map::getMap()
 {
-	return tileMap;
+	return map;
+}
+
+MapObjects Map::at(int _x, int _y)
+{
+	return map[_y][_x];
+}
+
+int Map::getWidth()
+{
+	return width;
+}
+
+int Map::getHeight()
+{
+	return height;
 }
