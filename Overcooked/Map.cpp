@@ -93,14 +93,6 @@ void Map::draw(RenderWindow& rw)
 	}
 }
 
-void Map::update()
-{
-	/*for(auto obj : objects)
-	{
-		
-	}*/
-}
-
 Actions Map::interact(int _x, int _y)
 {
 	_x /= TILE_SIZE;

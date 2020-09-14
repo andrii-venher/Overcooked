@@ -1,5 +1,18 @@
 #include "Game.h"
 
+Game::Game()
+{
+	tileset.loadFromFile("Images/tiles.png");
+	backgroundTexture.loadFromFile("Images/background.png");
+	background.setTexture(backgroundTexture);
+	map = new Map(tileset, objects);
+	player = new Player(tileset, map->getWidth() * TILE_SIZE / 2 + TILE_SIZE / 2, map->getHeight() * TILE_SIZE / 2 + TILE_SIZE / 2, objects);
+	queue = new OrderQueue();
+	background.setPosition(map->getWidth() * TILE_SIZE, 0);
+	queue->setPosition(map->getWidth() * TILE_SIZE, TILE_SIZE);
+	stats = new GameStats(tileset, map->getWidth() * TILE_SIZE, 0);
+}
+
 void Game::generatePlates()
 {
 	int orders = queue->getOrders().size();
@@ -13,7 +26,6 @@ void Game::generatePlates()
 			{
 				plates++;
 			}
-
 		}
 	}
 	for (int i = 0; i < orders - plates; i++)
@@ -34,22 +46,30 @@ void Game::generateCookingUtensils()
 	}
 }
 
-Game::Game()
+void Game::generateOrders(float time)
 {
-	tileset.loadFromFile("Images/tiles.png");
-	map = new Map(tileset, objects);
-	player = new Player(tileset, map->getWidth() * TILE_SIZE / 2 + TILE_SIZE / 2, map->getHeight() * TILE_SIZE / 2 + TILE_SIZE / 2, objects);
-	queue = new OrderQueue();
-	queue->add(new TomatoSoupOrder(tileset));
-	queue->add(new MushroomSoupOrder(tileset));
-	queue->add(new OnionSoupOrder(tileset));
-	queue->setPosition(11 * TILE_SIZE, 0);
+	static float timer = 0.0;
+	if (queue->getOrders().size() == 0)
+	{
+		RandomOrderFactory randomOrderFactory(tileset);
+		queue->add(randomOrderFactory.create());
+	}
+	if (timer < queue->getOrders().front()->getOrderTime() * 0.4)
+	{
+		timer += time;
+	}
+	else
+	{
+		RandomOrderFactory randomOrderFactory(tileset);
+		queue->add(randomOrderFactory.create());
+		timer = 0;
+	}
 }
 
 void Game::loop()
 {
-	RenderWindow window(VideoMode(454, 352), "Overcooked!");
-
+	RenderWindow window(VideoMode(TILE_SIZE * map->getWidth() + TILE_SIZE * 3 + 6, TILE_SIZE * map->getHeight()), "Overcooked!", 
+		sf::Style::Close);
 	Clock clock;
 
 	generateCookingUtensils();
@@ -61,8 +81,6 @@ void Game::loop()
 		clock.restart();
 
 		generatePlates();
-
-		//std::cout << "1\n";
 
 		sf::Event event;
 		while (window.pollEvent(event))
@@ -99,9 +117,9 @@ void Game::loop()
 		}
 
 		player->update(time, map->getMap());
-		map->update();
 
 		window.clear();
+		window.draw(background);
 		map->draw(window);
 		std::vector<TiledObject*> removedElements;
 		for (TiledObject* obj : objects)
@@ -145,7 +163,7 @@ void Game::loop()
 					if (plate->isOnCheckout())
 					{
 						auto orderList = queue->getOrders();
-						
+
 						for (const auto& order : orderList)
 						{
 							if (checkLists(order->getList(), plate->getList()))
@@ -157,8 +175,8 @@ void Game::loop()
 							}
 						}
 					}
-					break;
 				}
+				break;
 			}
 			case ObjectTypes::FOOD:
 			{
@@ -180,8 +198,14 @@ void Game::loop()
 			objects.remove(el);
 		}
 		player->draw(window);
+
+		generateOrders(time);
 		queue->update(time);
 		queue->draw(window);
+
+		stats->update(time, queue->getTips());
+		stats->draw(window);
+
 		window.display();
 	}
 }

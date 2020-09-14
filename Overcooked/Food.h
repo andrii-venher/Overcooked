@@ -1,6 +1,5 @@
 #pragma once
 #include "TiledObject.h"
-#include <unordered_map>
 
 enum class FoodTypes { TOMATO, MUSHROOM, ONION };
 

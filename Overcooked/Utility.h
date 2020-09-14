@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "TiledObject.h"
 #include "Food.h"
+#include <list>
 
 sf::Vector2i mapPosition(TiledObject* obj);
 float convertToMapPosition(int value);

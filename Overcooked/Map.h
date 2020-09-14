@@ -22,7 +22,6 @@ class Map
 public:
 	Map(Texture& texture, std::list<TiledObject*>& _objects);
 	void draw(RenderWindow& rw);
-	void update();
 	Actions interact(int _x, int _y);
 	Actions fabricate(int _x, int _y);
 	MapObjects** getMap();

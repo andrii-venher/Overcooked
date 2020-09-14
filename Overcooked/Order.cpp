@@ -26,12 +26,19 @@ Order::Order(Texture& t)
 
 bool Order::isValid()
 {
+	if (completed)
+		return false;
 	return (timer < orderTime) ? true : false;
 }
 
 void Order::complete()
 {
-	timer = orderTime;
+	completed = true;
+}
+
+bool Order::isCompleted()
+{
+	return completed;
 }
 
 void Order::update(float time)
@@ -85,6 +92,19 @@ Vector2f Order::getPosition()
 	return Vector2f(x, y);
 }
 
+int Order::getOrderTime()
+{
+	return orderTime;
+}
+
+int Order::getTips()
+{
+	int additionalTips = (orderTime / timer) * tips;
+	if (additionalTips > 30)
+		additionalTips = 30;
+	return tips + additionalTips;
+}
+
 void OrderQueue::resetPosition(Order* order)
 {
 	if (queue.size() == 0)
@@ -123,6 +143,10 @@ void OrderQueue::update(float time)
 	}
 	for (auto it : invalidOrders)
 	{
+		if ((*it)->isCompleted())
+			totalTips += (*it)->getTips();
+		else if(totalTips > 0)
+			totalTips -= 10;
 		queue.erase(it);
 	}
 	for (const auto& order : queue)
@@ -154,6 +178,11 @@ std::list<Order*> OrderQueue::getOrders()
 	return queue;
 }
 
+int OrderQueue::getTips()
+{
+	return totalTips;
+}
+
 TomatoSoupOrder::TomatoSoupOrder(Texture& t) : Order(t)
 {
 	foodList.push_back(new Tomato(t));
@@ -174,6 +203,7 @@ MushroomSoupOrder::MushroomSoupOrder(Texture& t) : Order(t)
 	{
 		(*it)->setCooked();
 	}
+	tips = 6;
 }
 
 OnionSoupOrder::OnionSoupOrder(Texture& t) : Order(t)
@@ -184,5 +214,30 @@ OnionSoupOrder::OnionSoupOrder(Texture& t) : Order(t)
 	for (auto it = std::begin(foodList); it != std::end(foodList); it++)
 	{
 		(*it)->setCooked();
+	}
+	tips = 8;
+}
+
+RandomOrderFactory::RandomOrderFactory(Texture& _texture) : texture(_texture)
+{
+	srand(time(0));
+	rand();
+}
+
+Order* RandomOrderFactory::create()
+{
+	switch (rand() % 3)
+	{
+	case 0:
+		return new TomatoSoupOrder(texture);
+		break;
+	case 1:
+		return new MushroomSoupOrder(texture);
+		break;
+	case 2:
+		return new OnionSoupOrder(texture);
+		break;
+	default:
+		break;
 	}
 }

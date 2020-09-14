@@ -5,6 +5,7 @@
 #include "Map.h"
 #include "Order.h"
 #include "Utility.h"
+#include "GameStats.h"
 
 class Game
 {
@@ -13,9 +14,13 @@ class Game
 	std::list<TiledObject*> objects;
 	OrderQueue* queue;
 	Texture tileset;
+	Sprite background;
+	Texture backgroundTexture;
+	GameStats* stats;
 
 	void generatePlates();
 	void generateCookingUtensils();
+	void generateOrders(float time);
 public:
 	Game();
 	void loop();

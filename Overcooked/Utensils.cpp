@@ -165,10 +165,13 @@ void Pan::changeTexture()
 		{
 		case FoodTypes::TOMATO:
 			sprite.setTextureRect(IntRect(7 * TILE_SIZE, 2 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+			break;
 		case FoodTypes::MUSHROOM:
 			sprite.setTextureRect(IntRect(7 * TILE_SIZE, 3 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+			break;
 		case FoodTypes::ONION:
 			sprite.setTextureRect(IntRect(7 * TILE_SIZE, 4 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+			break;
 		default:
 			break;
 		}

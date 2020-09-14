@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "Food.h"
 #include "Utensils.h"
+#include <ctime>
 
 class Order
 {
@@ -11,16 +12,19 @@ protected:
 	float y = 0;
 	std::list<Food*> foodList;
 	float timer = 0;
-	int orderTime = 10000000;
+	int orderTime = 80000;
 	RectangleShape timerBar;
 	int height = TILE_SIZE + 6;
 	int width = TILE_SIZE * 3 + 6;
 	RectangleShape outer;
 	RectangleShape inner;
+	int tips = 4;
+	bool completed = false;
 public:
 	Order(Texture& t);
 	bool isValid();
 	void complete();
+	bool isCompleted();
 	void update(float time);
 	void draw(RenderWindow& rw);
 	void setPosition(float _x, float _y);
@@ -28,12 +32,15 @@ public:
 	float getWidth();
 	std::list<Food*> getList();
 	Vector2f getPosition();
+	int getOrderTime();
+	int getTips();
 };
 
 class OrderQueue
 {
 	float x = 0;
 	float y = 0;
+	int totalTips = 0;
 	std::list<Order*> queue;
 	void resetPosition(Order* order);
 public:
@@ -42,6 +49,15 @@ public:
 	void draw(RenderWindow& rw);
 	void setPosition(float _x, float _y);
 	std::list<Order*> getOrders();
+	int getTips();
+};
+
+class RandomOrderFactory
+{
+	Texture& texture;
+public:
+	RandomOrderFactory(Texture& _texture);
+	Order* create();
 };
 
 class TomatoSoupOrder : public Order
