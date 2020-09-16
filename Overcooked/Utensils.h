@@ -16,8 +16,8 @@ protected:
 	bool isFoodEqualInFilling();
 public:
 	Utensil(const Utensil& utensils);
-	Utensil(Texture& texture, int tileX, int tileY);
-	Utensil(Texture& texture, float _x, float _y, int tileX, int tileY);
+	Utensil(sf::Texture& texture, int tileX, int tileY);
+	Utensil(sf::Texture& texture, float _x, float _y, int tileX, int tileY);
 	~Utensil();
 	virtual bool add(TiledObject* obj) = 0;
 	int getCapacity();
@@ -31,16 +31,16 @@ class CookingUtensil : public Utensil
 protected:
 	int readyTimer = 0;
 	bool stove = false;
-	RectangleShape readyBar;
+	sf::RectangleShape readyBar;
 	const int readyTime = 1000;
 public:
 	CookingUtensil(const CookingUtensil& cookingUtensils);
-	CookingUtensil(Texture& texture, int tileX, int tileY);
-	CookingUtensil(Texture& texture, float _x, float _y, int tileX, int tileY);
+	CookingUtensil(sf::Texture& texture, int tileX, int tileY);
+	CookingUtensil(sf::Texture& texture, float _x, float _y, int tileX, int tileY);
 	void onStove();
 	void offStove();
 	void update(float time);
-	void draw(RenderWindow& rw) override;
+	void draw(sf::RenderWindow& rw) override;
 	bool add(TiledObject* obj) override;
 };
 
@@ -50,10 +50,10 @@ class Plate : public Utensil
 	void setStandartTexture() override;
 	bool checkout = false;
 public:
-	Plate(Texture& texture);
-	Plate(Texture& texture, float _x, float _y);
+	Plate(sf::Texture& texture);
+	Plate(sf::Texture& texture, float _x, float _y);
 	bool add(TiledObject* obj) override;
-	void draw(RenderWindow& rw) override;
+	void draw(sf::RenderWindow& rw) override;
 	void update();
 	void onCheckout();
 	void offCheckout();
@@ -66,7 +66,7 @@ class Pan : public CookingUtensil
 	void changeTexture() override;
 	void setStandartTexture() override;
 public:
-	Pan(Texture& texture);
-	Pan(Texture& texture, float _x, float _y);
+	Pan(sf::Texture& texture);
+	Pan(sf::Texture& texture, float _x, float _y);
 };
 

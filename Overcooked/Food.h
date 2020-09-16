@@ -6,44 +6,45 @@ enum class FoodTypes { TOMATO, MUSHROOM, ONION };
 class Food : public TiledObject
 {
 protected:
-	unsigned int cutCounter = 0;
-	virtual void changeTexture() = 0;
-	FoodTypes fType;
-	RectangleShape cutBar;
-	const int cutsNeeded = 3;
 	bool cooked = false;
+	const int cutsNeeded = 3;
+	unsigned int cutCounter = 0;
+	FoodTypes fType;
+	sf::RectangleShape cutBar;
+
+	virtual void changeTexture() = 0;
 public:
 	Food(const Food& food);
-	Food(Texture& texture, int tileX, int tileY);
-	Food(Texture& texture, float _x, float _y, int tileX, int tileY);
+	Food(sf::Texture& texture, int tileX, int tileY);
+	Food(sf::Texture& texture, float _x, float _y, int tileX, int tileY);
 	void cut();
 	bool isCut();
 	void setCooked();
 	bool isCooked();
 	FoodTypes getFoodType();
-	void draw(RenderWindow& rw) override;
+	void draw(sf::RenderWindow& rw) override;
 };
 
 class Tomato : public Food
 {
 	void changeTexture() override;
 public:
-	Tomato(Texture& texture);
-	Tomato(Texture& texture, float _x, float _y);
+	Tomato(sf::Texture& texture);
+	Tomato(sf::Texture& texture, float _x, float _y);
 };
 
 class Mushroom : public Food
 {
 	void changeTexture() override;
 public:
-	Mushroom(Texture& texture);
-	Mushroom(Texture& texture, float _x, float _y);
+	Mushroom(sf::Texture& texture);
+	Mushroom(sf::Texture& texture, float _x, float _y);
 };
 
 class Onion : public Food
 {
 	void changeTexture() override;
 public:
-	Onion(Texture& texture);
-	Onion(Texture& texture, float _x, float _y);
+	Onion(sf::Texture& texture);
+	Onion(sf::Texture& texture, float _x, float _y);
 };

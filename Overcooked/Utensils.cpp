@@ -22,9 +22,9 @@ Utensil::Utensil(const Utensil& utensils) : TiledObject(utensils)
 	type = ObjectTypes::UTENSILS;
 }
 
-Utensil::Utensil(Texture& texture, int tileX, int tileY) : Utensil(texture, 0, 0, tileX, tileY) {}
+Utensil::Utensil(sf::Texture& texture, int tileX, int tileY) : Utensil(texture, 0, 0, tileX, tileY) {}
 
-Utensil::Utensil(Texture& texture, float _x, float _y, int tileX, int tileY) : TiledObject(texture, _x, _y, tileX, tileY)
+Utensil::Utensil(sf::Texture& texture, float _x, float _y, int tileX, int tileY) : TiledObject(texture, _x, _y, tileX, tileY)
 {
 	type = ObjectTypes::UTENSILS;
 }
@@ -39,14 +39,14 @@ Utensil::~Utensil()
 
 CookingUtensil::CookingUtensil(const CookingUtensil& cookingUtensils) : Utensil(cookingUtensils)
 {
-	readyBar.setFillColor(Color(255, 0, 0));
+	readyBar.setFillColor(sf::Color(255, 0, 0));
 }
 
-CookingUtensil::CookingUtensil(Texture& texture, int tileX, int tileY) : CookingUtensil(texture, 0, 0, tileX, tileY) {}
+CookingUtensil::CookingUtensil(sf::Texture& texture, int tileX, int tileY) : CookingUtensil(texture, 0, 0, tileX, tileY) {}
 
-CookingUtensil::CookingUtensil(Texture& texture, float _x, float _y, int tileX, int tileY) : Utensil(texture, _x, _y, tileX, tileY) 
+CookingUtensil::CookingUtensil(sf::Texture& texture, float _x, float _y, int tileX, int tileY) : Utensil(texture, _x, _y, tileX, tileY)
 {
-	readyBar.setFillColor(Color(255, 0, 0));
+	readyBar.setFillColor(sf::Color(255, 0, 0));
 }
 
 int Utensil::getCapacity()
@@ -97,13 +97,13 @@ void CookingUtensil::update(float time)
 	{
 		readyTimer = 0;
 		setStandartTexture();
-		readyBar.setSize(Vector2f(0, 0));
+		readyBar.setSize(sf::Vector2f(0, 0));
 		return;
 	}
 	if (readyTimer > readyTime * getCapacity())
 	{
 		changeTexture();
-		readyBar.setFillColor(Color(0, 255, 0));
+		readyBar.setFillColor(sf::Color(0, 255, 0));
 		for (const auto& food : filling)
 		{
 			food->setCooked();
@@ -113,16 +113,16 @@ void CookingUtensil::update(float time)
 	else
 	{
 		setStandartTexture();
-		readyBar.setFillColor(Color(255, 0, 0));
+		readyBar.setFillColor(sf::Color(255, 0, 0));
 	}
 	if (stove)
 	{
 		readyTimer += time;
-		readyBar.setSize(Vector2f(TILE_SIZE / ((double)readyTime * getCapacity()) * readyTimer, 5));
+		readyBar.setSize(sf::Vector2f(TILE_SIZE / ((double)readyTime * getCapacity()) * readyTimer, 5));
 	}
 }
 
-void CookingUtensil::draw(RenderWindow& rw)
+void CookingUtensil::draw(sf::RenderWindow& rw)
 {
 	TiledObject::draw(rw);
 	int shift = 0;
@@ -156,7 +156,7 @@ void Pan::changeTexture()
 {
 	if (!isFoodEqualInFilling())
 	{
-		sprite.setTextureRect(IntRect(3 * TILE_SIZE, 1 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+		sprite.setTextureRect(sf::IntRect(3 * TILE_SIZE, 1 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
 		return;
 	}
 	if (getCapacity())
@@ -164,13 +164,13 @@ void Pan::changeTexture()
 		switch (filling.front()->getFoodType())
 		{
 		case FoodTypes::TOMATO:
-			sprite.setTextureRect(IntRect(7 * TILE_SIZE, 2 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+			sprite.setTextureRect(sf::IntRect(7 * TILE_SIZE, 2 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
 			break;
 		case FoodTypes::MUSHROOM:
-			sprite.setTextureRect(IntRect(7 * TILE_SIZE, 3 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+			sprite.setTextureRect(sf::IntRect(7 * TILE_SIZE, 3 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
 			break;
 		case FoodTypes::ONION:
-			sprite.setTextureRect(IntRect(7 * TILE_SIZE, 4 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+			sprite.setTextureRect(sf::IntRect(7 * TILE_SIZE, 4 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
 			break;
 		default:
 			break;
@@ -181,18 +181,18 @@ void Pan::changeTexture()
 
 void Pan::setStandartTexture()
 {
-	sprite.setTextureRect(IntRect(2 * TILE_SIZE, 1 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+	sprite.setTextureRect(sf::IntRect(2 * TILE_SIZE, 1 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
 }
 
-Pan::Pan(Texture& texture) : CookingUtensil(texture, 2, 1) {}
+Pan::Pan(sf::Texture& texture) : CookingUtensil(texture, 2, 1) {}
 
-Pan::Pan(Texture& texture, float _x, float _y) : CookingUtensil(texture, _x, _y, 2, 1) {}
+Pan::Pan(sf::Texture& texture, float _x, float _y) : CookingUtensil(texture, _x, _y, 2, 1) {}
 
 void Plate::changeTexture()
 {
 	if (!isFoodEqualInFilling())
 	{
-		sprite.setTextureRect(IntRect(1 * TILE_SIZE, 1 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+		sprite.setTextureRect(sf::IntRect(1 * TILE_SIZE, 1 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
 		return;
 	}
 	switch (filling.front()->getFoodType())
@@ -200,29 +200,29 @@ void Plate::changeTexture()
 	case FoodTypes::TOMATO:
 		
 		if (filling.front()->isCooked())
-			sprite.setTextureRect(IntRect(6 * TILE_SIZE, 2 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+			sprite.setTextureRect(sf::IntRect(6 * TILE_SIZE, 2 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
 		else if(filling.front()->isCut())
-			sprite.setTextureRect(IntRect(5 * TILE_SIZE, 2 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+			sprite.setTextureRect(sf::IntRect(5 * TILE_SIZE, 2 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
 		else
-			sprite.setTextureRect(IntRect(4 * TILE_SIZE, 2 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+			sprite.setTextureRect(sf::IntRect(4 * TILE_SIZE, 2 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
 		break;
 	case FoodTypes::MUSHROOM:
 
 		if (filling.front()->isCooked())
-			sprite.setTextureRect(IntRect(6 * TILE_SIZE, 3 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+			sprite.setTextureRect(sf::IntRect(6 * TILE_SIZE, 3 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
 		else if (filling.front()->isCut())
-			sprite.setTextureRect(IntRect(5 * TILE_SIZE, 3 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+			sprite.setTextureRect(sf::IntRect(5 * TILE_SIZE, 3 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
 		else
-			sprite.setTextureRect(IntRect(4 * TILE_SIZE, 3 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+			sprite.setTextureRect(sf::IntRect(4 * TILE_SIZE, 3 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
 		break;
 	case FoodTypes::ONION:
 
 		if (filling.front()->isCooked())
-			sprite.setTextureRect(IntRect(6 * TILE_SIZE, 4 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+			sprite.setTextureRect(sf::IntRect(6 * TILE_SIZE, 4 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
 		else if (filling.front()->isCut())
-			sprite.setTextureRect(IntRect(5 * TILE_SIZE, 4 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+			sprite.setTextureRect(sf::IntRect(5 * TILE_SIZE, 4 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
 		else
-			sprite.setTextureRect(IntRect(4 * TILE_SIZE, 4 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+			sprite.setTextureRect(sf::IntRect(4 * TILE_SIZE, 4 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
 		break;
 	default:
 		break;
@@ -231,12 +231,12 @@ void Plate::changeTexture()
 
 void Plate::setStandartTexture()
 {
-	sprite.setTextureRect(IntRect(0 * TILE_SIZE, 1 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+	sprite.setTextureRect(sf::IntRect(0 * TILE_SIZE, 1 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
 }
 
-Plate::Plate(Texture& texture) : Plate(texture, 0, 1) {}
+Plate::Plate(sf::Texture& texture) : Plate(texture, 0, 1) {}
 
-Plate::Plate(Texture& texture, float _x, float _y) : Utensil(texture, _x, _y, 0, 1)
+Plate::Plate(sf::Texture& texture, float _x, float _y) : Utensil(texture, _x, _y, 0, 1)
 {
 	utensilType = UtensilType::PLATE;
 }
@@ -252,7 +252,7 @@ bool Plate::add(TiledObject* obj)
 	return false;
 }
 
-void Plate::draw(RenderWindow& rw)
+void Plate::draw(sf::RenderWindow& rw)
 {
 	TiledObject::draw(rw);
 	int shift = 0;

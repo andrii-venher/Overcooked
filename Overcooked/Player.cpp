@@ -1,6 +1,6 @@
 #include "Player.h"
 
-Player::Player(Texture& texture, float _x, float _y, std::list<TiledObject*>& _objects) : 
+Player::Player(sf::Texture& texture, float _x, float _y, std::list<TiledObject*>& _objects) :
 	TiledObject(texture, _x, _y, 0, 0), 
 	objects(_objects)
 {
@@ -118,32 +118,32 @@ void Player::update(float time, MapObjects** map)
 
 void Player::trackControls()
 {
-	if (Keyboard::isKeyPressed)
+	if (sf::Keyboard::isKeyPressed)
 	{
-		if (Keyboard::isKeyPressed(Keyboard::A))
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 		{
 			state = States::LEFT;
 		}
-		else if (Keyboard::isKeyPressed(Keyboard::W))
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 		{
 			state = States::UP;
 		}
-		else if (Keyboard::isKeyPressed(Keyboard::D))
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 		{
 			state = States::RIGHT;
 		}
-		else if (Keyboard::isKeyPressed(Keyboard::S))
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 		{
 			state = States::DOWN;
 		}
-		else if (Keyboard::isKeyPressed(Keyboard::Space))
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 		{
 			state = States::NEEDS_UPDATE;
 		}
 	}
 }
 
-Sprite Player::getSprite()
+sf::Sprite Player::getSprite()
 {
 	return sprite;
 }
@@ -153,12 +153,12 @@ bool Player::isSomethingInHands()
 	return (inHands) ? true : false;
 }
 
-Sprite Player::getInHandsSprite()
+sf::Sprite Player::getInHandsSprite()
 {
 	if (inHands)
 		return inHands->getSprite();
 	else
-		return Sprite();
+		return sf::Sprite();
 }
 
 void Player::take()
@@ -189,7 +189,7 @@ void Player::take()
 
 void Player::put()
 {
-	Vector2f pos(mapPosition(inHands).x, mapPosition(inHands).y);
+	sf::Vector2f pos(convertToMapPosition(inHands->getSprite().getPosition()).x, convertToMapPosition(inHands->getSprite().getPosition()).y);
 	pos.x *= TILE_SIZE;
 	pos.x += TILE_SIZE / 2;
 	pos.y *= TILE_SIZE;
@@ -240,7 +240,7 @@ std::pair<int, int> Player::getNextPosition()
 	}
 }
 
-void Player::draw(RenderWindow& rw)
+void Player::draw(sf::RenderWindow& rw)
 {
 	TiledObject::draw(rw);
 	if (isSomethingInHands())

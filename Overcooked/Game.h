@@ -13,14 +13,16 @@ class Game
 	Map* map;
 	std::list<TiledObject*> objects;
 	OrderQueue* queue;
-	Texture tileset;
-	Sprite background;
-	Texture backgroundTexture;
+	sf::Texture tileset;
+	sf::Sprite background;
+	sf::Texture backgroundTexture;
 	GameStats* stats;
 
 	void generatePlates();
 	void generateCookingUtensils();
 	void generateOrders(float time);
+	void checkDispencer();
+	void checkCutting();
 public:
 	Game();
 	void loop();

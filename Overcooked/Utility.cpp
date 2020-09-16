@@ -1,16 +1,16 @@
 #include "Utility.h"
 
-sf::Vector2i mapPosition(TiledObject* obj)
+sf::Vector2i convertToMapPosition(sf::Vector2f position)
 {
-    return sf::Vector2i((int)obj->getSprite().getPosition().x / TILE_SIZE, (int)obj->getSprite().getPosition().y / TILE_SIZE);
+    return sf::Vector2i((int)position.x / TILE_SIZE, (int)position.y / TILE_SIZE);
 }
 
-float convertToMapPosition(int value)
+sf::Vector2f convertToFloatPosition(sf::Vector2i position)
 {
-	return value * TILE_SIZE + TILE_SIZE / 2;
+	return sf::Vector2f(position.x * TILE_SIZE + TILE_SIZE / 2, position.y * TILE_SIZE + TILE_SIZE / 2);
 }
 
-bool checkLists(std::list<Food*> list1, std::list<Food*> list2)
+bool checkListsForEqualFilling(std::list<Food*> list1, std::list<Food*> list2)
 {
 	if (list1.size() != list2.size())
 		return false;

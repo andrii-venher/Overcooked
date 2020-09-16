@@ -8,7 +8,7 @@ TiledObject::TiledObject(const TiledObject& obj)
 	this->y = obj.y;
 }
 
-TiledObject::TiledObject(Texture& texture, int tileX, int tileY)
+TiledObject::TiledObject(sf::Texture& texture, int tileX, int tileY)
 {
 	sprite.setTexture(texture);
 
@@ -22,7 +22,7 @@ TiledObject::TiledObject(Texture& texture, int tileX, int tileY)
 	y = 0;
 }
 
-TiledObject::TiledObject(Texture& texture, float _x, float _y, int tileX, int tileY)
+TiledObject::TiledObject(sf::Texture& texture, float _x, float _y, int tileX, int tileY)
 {
 	sprite.setTexture(texture);
 
@@ -37,7 +37,7 @@ TiledObject::TiledObject(Texture& texture, float _x, float _y, int tileX, int ti
 	sprite.setPosition(x, y);
 }
 
-Sprite TiledObject::getSprite()
+sf::Sprite TiledObject::getSprite()
 {
 	return sprite;
 }
@@ -49,10 +49,10 @@ void TiledObject::setPosition(float _x, float _y)
 
 void TiledObject::setScale(float _factorX, float _factorY)
 {
-	sprite.setScale(Vector2f(_factorX, _factorY));
+	sprite.setScale(sf::Vector2f(_factorX, _factorY));
 }
 
-IntRect TiledObject::getTileRect()
+sf::IntRect TiledObject::getTileRect()
 {
 	return tileRect;
 }
@@ -74,7 +74,7 @@ Rotations TiledObject::getRotation()
 	}
 }
 
-void TiledObject::draw(RenderWindow& rw)
+void TiledObject::draw(sf::RenderWindow& rw)
 {
 	rw.draw(sprite);
 }

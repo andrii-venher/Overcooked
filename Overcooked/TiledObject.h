@@ -3,28 +3,26 @@
 #include <iostream>
 #include "GameSettings.h"
 
-using namespace sf;
-
 enum class ObjectTypes { PLAYER, FOOD, UTENSILS };
 
 class TiledObject
 {
 protected:
-	Sprite sprite;
+	sf::Sprite sprite;
 	float x;
 	float y;
-	IntRect tileRect;
+	sf::IntRect tileRect;
 	ObjectTypes type;
 public:
 	TiledObject(const TiledObject& obj);
-	TiledObject(Texture& texture, int tileX, int tileY);
-	TiledObject(Texture& texture, float _x, float _y, int tileX, int tileY);
-	Sprite getSprite();
+	TiledObject(sf::Texture& texture, int tileX, int tileY);
+	TiledObject(sf::Texture& texture, float _x, float _y, int tileX, int tileY);
+	sf::Sprite getSprite();
 	void setPosition(float _x, float _y);
 	void setScale(float _factorX, float _factorY);
-	IntRect getTileRect();
+	sf::IntRect getTileRect();
 	Rotations getRotation();
-	virtual void draw(RenderWindow& rw);
+	virtual void draw(sf::RenderWindow& rw);
 	ObjectTypes getType();
 };
 

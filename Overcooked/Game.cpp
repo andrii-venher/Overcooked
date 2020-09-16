@@ -30,7 +30,8 @@ void Game::generatePlates()
 	}
 	for (int i = 0; i < orders - plates; i++)
 	{
-		objects.push_back(new Plate(tileset, convertToMapPosition(0), convertToMapPosition(1)));
+		sf::Vector2f pos(convertToFloatPosition(sf::Vector2i(0, 1)));
+		objects.push_back(new Plate(tileset, pos.x, pos.y));
 	}
 }
 
@@ -40,8 +41,11 @@ void Game::generateCookingUtensils()
 	{
 		for (int j = 0; j < map->getWidth(); j++)
 		{
-			if(map->at(j, i) == MapObjects::STOVE)
-				objects.push_back(new Pan(tileset, convertToMapPosition(j), convertToMapPosition(i)));
+			if (map->at(j, i) == MapObjects::STOVE)
+			{
+				sf::Vector2f pos(convertToFloatPosition(sf::Vector2i(j, i)));
+				objects.push_back(new Pan(tileset, pos.x, pos.y));
+			}
 		}
 	}
 }
@@ -66,22 +70,68 @@ void Game::generateOrders(float time)
 	}
 }
 
+void Game::checkDispencer()
+{
+	int x = player->getNextPosition().first;
+	int y = player->getNextPosition().second;
+	x /= TILE_SIZE;
+	y /= TILE_SIZE;
+	if (map->at(x, y) == MapObjects::TOMATO_DISPENSER)
+	{
+		objects.push_back(new Tomato(tileset, x * TILE_SIZE + TILE_SIZE / 2, y * TILE_SIZE + TILE_SIZE / 2));
+		player->take();
+	}
+	else if (map->at(x, y) == MapObjects::MUSHROOM_DISPENCER)
+	{
+		objects.push_back(new Mushroom(tileset, x * TILE_SIZE + TILE_SIZE / 2, y * TILE_SIZE + TILE_SIZE / 2));
+		player->take();
+	}
+	else if (map->at(x, y) == MapObjects::ONION_DISPENCER)
+	{
+		objects.push_back(new Onion(tileset, x * TILE_SIZE + TILE_SIZE / 2, y * TILE_SIZE + TILE_SIZE / 2));
+		player->take();
+	}
+}
+
+void Game::checkCutting()
+{
+	TiledObject* object = nullptr;
+	int x = player->getNextPosition().first;
+	int y = player->getNextPosition().second;
+	x /= TILE_SIZE;
+	y /= TILE_SIZE;
+	for (const auto& obj : objects)
+	{
+		if (obj->getSprite().getPosition() == sf::Vector2f(x * TILE_SIZE + TILE_SIZE / 2, y * TILE_SIZE + TILE_SIZE / 2))
+		{
+			object = obj;
+			break;
+		}
+	}
+	if (object)
+	{
+		if (map->at(x, y) == MapObjects::CUTTING_BOARD && object->getType() == ObjectTypes::FOOD)
+		{
+			Food* foodObj = (Food*)object;
+			foodObj->cut();
+		}
+	}
+}
+
 void Game::loop()
 {
-	RenderWindow window(VideoMode(TILE_SIZE * map->getWidth() + TILE_SIZE * 3 + 6, TILE_SIZE * map->getHeight()), "Overcooked!", 
+	sf::RenderWindow window(sf::VideoMode(TILE_SIZE * map->getWidth() + TILE_SIZE * 3 + 6, TILE_SIZE * map->getHeight()), "Overcooked!", 
 		sf::Style::Close);
-	Clock clock;
-
+	sf::Clock clock;
+	//one pan for each stove
 	generateCookingUtensils();
-
 	while (window.isOpen())
 	{
 		float time = clock.getElapsedTime().asMicroseconds();
 		time /= 500;
 		clock.restart();
-
+		//if order was added, one more plate will appear
 		generatePlates();
-
 		sf::Event event;
 		while (window.pollEvent(event))
 		{
@@ -89,6 +139,7 @@ void Game::loop()
 				window.close();
 			if (event.type == sf::Event::KeyPressed)
 			{
+				//SPACE - to take or to put something
 				if (event.key.code == sf::Keyboard::Space)
 				{
 					if (player->isSomethingInHands())
@@ -100,18 +151,16 @@ void Game::loop()
 					{
 						player->take();
 					}
-
+					//if nothing was taken previously, try to use food dispencer and take food
 					if (!player->isSomethingInHands())
 					{
-						if (map->interact(player->getNextPosition().first, player->getNextPosition().second) == Actions::TAKE)
-						{
-							player->take();
-						}
+						checkDispencer();
 					}
 				}
+				//TAB - to cut food
 				if (event.key.code == sf::Keyboard::Tab)
 				{
-					map->fabricate(player->getNextPosition().first, player->getNextPosition().second);
+					checkCutting();
 				}
 			}
 		}
@@ -121,11 +170,12 @@ void Game::loop()
 		window.clear();
 		window.draw(background);
 		map->draw(window);
+		
 		std::vector<TiledObject*> removedElements;
 		for (TiledObject* obj : objects)
 		{
 			obj->draw(window);
-			Vector2i pos = mapPosition(obj);
+			sf::Vector2i pos = convertToMapPosition(obj->getSprite().getPosition());
 			switch (obj->getType())
 			{
 			case ObjectTypes::UTENSILS:
@@ -166,7 +216,7 @@ void Game::loop()
 
 						for (const auto& order : orderList)
 						{
-							if (checkLists(order->getList(), plate->getList()))
+							if (checkListsForEqualFilling(order->getList(), plate->getList()))
 							{
 								order->complete();
 								delete plate;

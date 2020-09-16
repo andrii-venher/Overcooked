@@ -13,25 +13,25 @@ protected:
 	std::list<Food*> foodList;
 	float timer = 0;
 	int orderTime = 80000;
-	RectangleShape timerBar;
+	sf::RectangleShape timerBar;
 	int height = TILE_SIZE + 6;
 	int width = TILE_SIZE * 3 + 6;
-	RectangleShape outer;
-	RectangleShape inner;
+	sf::RectangleShape outer;
+	sf::RectangleShape inner;
 	int tips = 4;
 	bool completed = false;
 public:
-	Order(Texture& t);
+	Order(sf::Texture& t);
 	bool isValid();
 	void complete();
 	bool isCompleted();
 	void update(float time);
-	void draw(RenderWindow& rw);
+	void draw(sf::RenderWindow& rw);
 	void setPosition(float _x, float _y);
 	float getHeight();
 	float getWidth();
 	std::list<Food*> getList();
-	Vector2f getPosition();
+	sf::Vector2f getPosition();
 	int getOrderTime();
 	int getTips();
 };
@@ -46,7 +46,7 @@ class OrderQueue
 public:
 	void add(Order* order);
 	void update(float time);
-	void draw(RenderWindow& rw);
+	void draw(sf::RenderWindow& rw);
 	void setPosition(float _x, float _y);
 	std::list<Order*> getOrders();
 	int getTips();
@@ -54,28 +54,28 @@ public:
 
 class RandomOrderFactory
 {
-	Texture& texture;
+	sf::Texture& texture;
 public:
-	RandomOrderFactory(Texture& _texture);
+	RandomOrderFactory(sf::Texture& _texture);
 	Order* create();
 };
 
 class TomatoSoupOrder : public Order
 {
 public:
-	TomatoSoupOrder(Texture& t);
+	TomatoSoupOrder(sf::Texture& t);
 };
 
 class MushroomSoupOrder : public Order
 {
 public:
-	MushroomSoupOrder(Texture& t);
+	MushroomSoupOrder(sf::Texture& t);
 };
 
 class OnionSoupOrder : public Order
 {
 public:
-	OnionSoupOrder(Texture& t);
+	OnionSoupOrder(sf::Texture& t);
 };
 
 

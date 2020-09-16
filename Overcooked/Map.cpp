@@ -1,6 +1,6 @@
 #include "Map.h"
 
-Map::Map(Texture& _texture, std::list<TiledObject*>& _objects) : objects(_objects)
+Map::Map(sf::Texture& _texture, std::list<TiledObject*>& _objects) : objects(_objects)
 {
 	sprite.setTexture(_texture);
 	texture = _texture;
@@ -62,85 +62,35 @@ Map::Map(Texture& _texture, std::list<TiledObject*>& _objects) : objects(_object
 	file.close();
 }
 
-void Map::draw(RenderWindow& rw)
+void Map::draw(sf::RenderWindow& rw)
 {
 	for (int i = 0; i < height; i++)
 	{
 		for (int j = 0; j < width; j++)
 		{
 			if (map[i][j] == MapObjects::FLOOR)
-				sprite.setTextureRect(IntRect(1 * TILE_SIZE, 0 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+				sprite.setTextureRect(sf::IntRect(1 * TILE_SIZE, 0 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
 			else if (map[i][j] == MapObjects::TABLE)
-				sprite.setTextureRect(IntRect(2 * TILE_SIZE, 0 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+				sprite.setTextureRect(sf::IntRect(2 * TILE_SIZE, 0 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
 			else if (map[i][j] == MapObjects::CHECKOUT)
-				sprite.setTextureRect(IntRect(3 * TILE_SIZE, 0 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+				sprite.setTextureRect(sf::IntRect(3 * TILE_SIZE, 0 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
 			else if (map[i][j] == MapObjects::CUTTING_BOARD)
-				sprite.setTextureRect(IntRect(4 * TILE_SIZE, 0 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+				sprite.setTextureRect(sf::IntRect(4 * TILE_SIZE, 0 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
 			else if(map[i][j] == MapObjects::STOVE)
-				sprite.setTextureRect(IntRect(5 * TILE_SIZE, 0 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+				sprite.setTextureRect(sf::IntRect(5 * TILE_SIZE, 0 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
 			else if(map[i][j] == MapObjects::TRASH)
-				sprite.setTextureRect(IntRect(6 * TILE_SIZE, 0 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+				sprite.setTextureRect(sf::IntRect(6 * TILE_SIZE, 0 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
 			else if (map[i][j] == MapObjects::TOMATO_DISPENSER)
-				sprite.setTextureRect(IntRect(0 * TILE_SIZE, 2 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+				sprite.setTextureRect(sf::IntRect(0 * TILE_SIZE, 2 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
 			else if(map[i][j] == MapObjects::MUSHROOM_DISPENCER)
-				sprite.setTextureRect(IntRect(0 * TILE_SIZE, 3 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+				sprite.setTextureRect(sf::IntRect(0 * TILE_SIZE, 3 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
 			else if (map[i][j] == MapObjects::ONION_DISPENCER)
-				sprite.setTextureRect(IntRect(0 * TILE_SIZE, 4 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+				sprite.setTextureRect(sf::IntRect(0 * TILE_SIZE, 4 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
 				
 			sprite.setPosition(j * TILE_SIZE, i * TILE_SIZE);
 			rw.draw(sprite);
 		}
 	}
-}
-
-Actions Map::interact(int _x, int _y)
-{
-	_x /= TILE_SIZE;
-	_y /= TILE_SIZE;
-	if (map[_y][_x] == MapObjects::TOMATO_DISPENSER)
-	{
-		objects.push_back(new Tomato(texture, _x * TILE_SIZE + TILE_SIZE / 2, _y * TILE_SIZE  + TILE_SIZE / 2));
-		return Actions::TAKE;
-	}
-	else if (map[_y][_x] == MapObjects::MUSHROOM_DISPENCER)
-	{
-		objects.push_back(new Mushroom(texture, _x * TILE_SIZE + TILE_SIZE / 2, _y * TILE_SIZE + TILE_SIZE / 2));
-		return Actions::TAKE;
-	}
-	else if (map[_y][_x] == MapObjects::ONION_DISPENCER)
-	{
-		objects.push_back(new Onion(texture, _x * TILE_SIZE + TILE_SIZE / 2, _y * TILE_SIZE + TILE_SIZE / 2));
-		return Actions::TAKE;
-	}
-	return Actions::WAIT;
-}
-
-Actions Map::fabricate(int _x, int _y)
-{
-	bool isOnBoard = false;
-	TiledObject* object = nullptr;
-	_x /= TILE_SIZE;
-	_y /= TILE_SIZE;
-
-	for (auto obj : objects)
-	{
-		if (obj->getSprite().getPosition() == Vector2f(_x * TILE_SIZE + TILE_SIZE / 2, _y * TILE_SIZE + TILE_SIZE / 2))
-		{
-			object = obj;
-			break;
-		}
-	}
-
-	if (object)
-	{
-		if (map[_y][_x] == MapObjects::CUTTING_BOARD && object->getType() == ObjectTypes::FOOD)
-		{
-			Food* foodObj = (Food*)object;
-			foodObj->cut();
-		}
-	}
-	
-	return Actions::WAIT;
 }
 
 MapObjects** Map::getMap()

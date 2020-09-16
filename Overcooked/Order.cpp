@@ -14,13 +14,13 @@ void Order::resetFieldsPosition()
 	}
 }
 
-Order::Order(Texture& t)
+Order::Order(sf::Texture& t)
 {
-	timerBar.setFillColor(Color(255, 0, 0));
-	outer.setFillColor(Color(255, 216, 0));
-	inner.setFillColor(Color(0, 0, 0));
-	outer.setSize(Vector2f(width, height));
-	inner.setSize(Vector2f(width - 6, height - 6));
+	timerBar.setFillColor(sf::Color(255, 0, 0));
+	outer.setFillColor(sf::Color(255, 216, 0));
+	inner.setFillColor(sf::Color(0, 0, 0));
+	outer.setSize(sf::Vector2f(width, height));
+	inner.setSize(sf::Vector2f(width - 6, height - 6));
 	resetFieldsPosition();
 }
 
@@ -51,10 +51,10 @@ void Order::update(float time)
 	{
 		return;
 	}
-	timerBar.setSize(Vector2f(width - (width * (double)timer) / orderTime, 5));
+	timerBar.setSize(sf::Vector2f(width - (width * (double)timer) / orderTime, 5));
 }
 
-void Order::draw(RenderWindow& rw)
+void Order::draw(sf::RenderWindow& rw)
 {
 	rw.draw(outer);
 	rw.draw(inner);
@@ -87,9 +87,9 @@ std::list<Food*> Order::getList()
 	return foodList;
 }
 
-Vector2f Order::getPosition()
+sf::Vector2f Order::getPosition()
 {
-	return Vector2f(x, y);
+	return sf::Vector2f(x, y);
 }
 
 int Order::getOrderTime()
@@ -155,7 +155,7 @@ void OrderQueue::update(float time)
 	}
 }
 
-void OrderQueue::draw(RenderWindow& rw)
+void OrderQueue::draw(sf::RenderWindow& rw)
 {
 	for (const auto& order : queue)
 	{
@@ -183,7 +183,7 @@ int OrderQueue::getTips()
 	return totalTips;
 }
 
-TomatoSoupOrder::TomatoSoupOrder(Texture& t) : Order(t)
+TomatoSoupOrder::TomatoSoupOrder(sf::Texture& t) : Order(t)
 {
 	foodList.push_back(new Tomato(t));
 	foodList.push_back(new Tomato(t));
@@ -194,7 +194,7 @@ TomatoSoupOrder::TomatoSoupOrder(Texture& t) : Order(t)
 	}
 }
 
-MushroomSoupOrder::MushroomSoupOrder(Texture& t) : Order(t)
+MushroomSoupOrder::MushroomSoupOrder(sf::Texture& t) : Order(t)
 {
 	foodList.push_back(new Mushroom(t));
 	foodList.push_back(new Mushroom(t));
@@ -206,7 +206,7 @@ MushroomSoupOrder::MushroomSoupOrder(Texture& t) : Order(t)
 	tips = 6;
 }
 
-OnionSoupOrder::OnionSoupOrder(Texture& t) : Order(t)
+OnionSoupOrder::OnionSoupOrder(sf::Texture& t) : Order(t)
 {
 	foodList.push_back(new Onion(t));
 	foodList.push_back(new Onion(t));
@@ -218,7 +218,7 @@ OnionSoupOrder::OnionSoupOrder(Texture& t) : Order(t)
 	tips = 8;
 }
 
-RandomOrderFactory::RandomOrderFactory(Texture& _texture) : texture(_texture)
+RandomOrderFactory::RandomOrderFactory(sf::Texture& _texture) : texture(_texture)
 {
 	srand(time(0));
 	rand();

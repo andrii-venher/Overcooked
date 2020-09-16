@@ -9,21 +9,17 @@
 #include <algorithm>
 #include <fstream>
 
-using namespace sf;
-
 class Map
 {
-	Sprite sprite;
-	Texture texture;
+	sf::Sprite sprite;
+	sf::Texture texture;
 	const int width = 11;
 	const int height = 11;
 	MapObjects** map;
 	std::list<TiledObject*>& objects;
 public:
-	Map(Texture& texture, std::list<TiledObject*>& _objects);
-	void draw(RenderWindow& rw);
-	Actions interact(int _x, int _y);
-	Actions fabricate(int _x, int _y);
+	Map(sf::Texture& texture, std::list<TiledObject*>& _objects);
+	void draw(sf::RenderWindow& rw);
 	MapObjects** getMap();
 	MapObjects at(int _x, int _y);
 	int getWidth();

@@ -6,8 +6,6 @@
 #include <list>
 #include <iostream>
 
-using namespace sf;
-
 class Player : public TiledObject
 {
 	TiledObject* inHands;
@@ -17,15 +15,15 @@ class Player : public TiledObject
 	float ySpeed;
 	std::list<TiledObject*>& objects;
 public:
-	Player(Texture& texture, float _x, float _y, std::list<TiledObject*>& _objects);
+	Player(sf::Texture& texture, float _x, float _y, std::list<TiledObject*>& _objects);
 	void update(float time, MapObjects** map);
 	void trackControls();
-	Sprite getSprite();
+	sf::Sprite getSprite();
 	bool isSomethingInHands();
-	Sprite getInHandsSprite();
+	sf::Sprite getInHandsSprite();
 	void take();
 	void put();
 	std::pair<int, int> getNextPosition();
-	void draw(RenderWindow& rw) override;
+	void draw(sf::RenderWindow& rw) override;
 };
 
