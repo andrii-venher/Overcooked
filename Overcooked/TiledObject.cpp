@@ -1,13 +1,5 @@
 #include "TiledObject.h"
 
-TiledObject::TiledObject(const TiledObject& obj)
-{
-	this->sprite = obj.sprite;
-	this->tileRect = obj.tileRect;
-	this->x = obj.x;
-	this->y = obj.y;
-}
-
 TiledObject::TiledObject(sf::Texture& texture, int tileX, int tileY)
 {
 	sprite.setTexture(texture);

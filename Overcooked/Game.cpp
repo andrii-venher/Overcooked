@@ -13,13 +13,26 @@ Game::Game()
 	stats = new GameStats(tileset, map->getWidth() * TILE_SIZE, 0);
 }
 
+Game::~Game()
+{
+	delete player;
+	delete map;
+	delete queue;
+	delete stats;
+	while (objects.size())
+	{
+		delete objects.front();
+		objects.pop_front();
+	}
+}
+
 void Game::generatePlates()
 {
 	int orders = queue->getOrders().size();
 	int plates = 0;
 	for (const auto& obj : objects)
 	{
-		if (obj->getType() == ObjectTypes::UTENSILS)
+		if (obj->getType() == ObjectTypes::UTENSIL)
 		{
 			Utensil* utensil = (Utensil*)obj;
 			if (utensil->getUtensilType() == UtensilType::PLATE)
@@ -118,9 +131,84 @@ void Game::checkCutting()
 	}
 }
 
+bool Game::checkOrders(Plate* plate)
+{
+	if (plate->isOnCheckout())
+	{
+		auto orderList = queue->getOrders();
+
+		for (const auto& order : orderList)
+		{
+			if (checkListsForEqualFilling(order->getList(), plate->getFilling()))
+			{
+				order->complete();
+				delete plate;
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+bool Game::checkTrash(TiledObject* obj)
+{
+	sf::Vector2i pos = convertToMapPosition(obj->getSprite().getPosition());
+	if (map->at(pos.x, pos.y) == MapObjects::TRASH)
+	{
+		switch (obj->getType())
+		{
+		case ObjectTypes::UTENSIL:
+		{
+			Utensil* utensil = (Utensil*)obj;
+			utensil->clear();
+			return false;
+		}
+		case ObjectTypes::FOOD:
+		{
+			delete obj;
+			return true;
+		}
+		default:
+			break;
+		}
+	}
+	return false;
+}
+
+void Game::updateUtensil(Utensil* utensil, float time)
+{
+	sf::Vector2i pos = convertToMapPosition(utensil->getSprite().getPosition());
+	if (utensil->getUtensilType() == UtensilType::COOKING)
+	{
+		CookingUtensil* cookingUtensil = (CookingUtensil*)utensil;
+		cookingUtensil->update(time);
+		if (map->at(pos.x, pos.y) == MapObjects::STOVE)
+		{
+			cookingUtensil->onStove();
+		}
+		else
+		{
+			cookingUtensil->offStove();
+		}
+	}
+	else if (utensil->getUtensilType() == UtensilType::PLATE)
+	{
+		Plate* plate = (Plate*)utensil;
+		plate->update();
+		if (map->at(pos.x, pos.y) == MapObjects::CHECKOUT)
+		{
+			plate->onCheckout();
+		}
+		else
+		{
+			plate->offCheckout();
+		}
+	}
+}
+
 void Game::loop()
 {
-	sf::RenderWindow window(sf::VideoMode(TILE_SIZE * map->getWidth() + TILE_SIZE * 3 + 6, TILE_SIZE * map->getHeight()), "Overcooked!", 
+	sf::RenderWindow window(sf::VideoMode(TILE_SIZE * map->getWidth() + TILE_SIZE * 3 + 6, TILE_SIZE * map->getHeight()), "Overcooked!",
 		sf::Style::Close);
 	sf::Clock clock;
 	//one pan for each stove
@@ -165,88 +253,42 @@ void Game::loop()
 			}
 		}
 
-		player->update(time, map->getMap());
+		player->update(time, map);
 
 		window.clear();
 		window.draw(background);
 		map->draw(window);
-		
+
+		//can't remove elements in loop -> save them to another container and remove after
 		std::vector<TiledObject*> removedElements;
 		for (TiledObject* obj : objects)
 		{
 			obj->draw(window);
 			sf::Vector2i pos = convertToMapPosition(obj->getSprite().getPosition());
-			switch (obj->getType())
+			if (checkTrash(obj))
 			{
-			case ObjectTypes::UTENSILS:
+				removedElements.push_back(obj);
+			}
+			if (obj->getType() == ObjectTypes::UTENSIL)
 			{
 				Utensil* utensil = (Utensil*)obj;
-				if (map->at(pos.x, pos.y) == MapObjects::TRASH)
-				{
-					utensil->clear();
-				}
-				if (utensil->getUtensilType() == UtensilType::COOKING)
-				{
-					CookingUtensil* cookingUtensil = (CookingUtensil*)utensil;
-					cookingUtensil->update(time);
-					if (map->at(pos.x, pos.y) == MapObjects::STOVE)
-					{
-						cookingUtensil->onStove();
-					}
-					else
-					{
-						cookingUtensil->offStove();
-					}
-				}
-				else if (utensil->getUtensilType() == UtensilType::PLATE)
+				updateUtensil(utensil, time);
+				if (utensil->getUtensilType() == UtensilType::PLATE)
 				{
 					Plate* plate = (Plate*)utensil;
-					plate->update();
-					if (map->at(pos.x, pos.y) == MapObjects::CHECKOUT)
+					if (checkOrders(plate))
 					{
-						plate->onCheckout();
-					}
-					else
-					{
-						plate->offCheckout();
-					}
-					if (plate->isOnCheckout())
-					{
-						auto orderList = queue->getOrders();
-
-						for (const auto& order : orderList)
-						{
-							if (checkListsForEqualFilling(order->getList(), plate->getList()))
-							{
-								order->complete();
-								delete plate;
-								removedElements.push_back(obj);
-								break;
-							}
-						}
+						removedElements.push_back(plate);
 					}
 				}
-				break;
-			}
-			case ObjectTypes::FOOD:
-			{
-				Food* food = (Food*)obj;
-				if (map->at(pos.x, pos.y) == MapObjects::TRASH)
-				{
-					delete food;
-					removedElements.push_back(obj);
-					break;
-				}
-				break;
-			}
-			default:
-				break;
 			}
 		}
-		for (auto el : removedElements)
+
+		for (const auto& el : removedElements)
 		{
 			objects.remove(el);
 		}
+
 		player->draw(window);
 
 		generateOrders(time);

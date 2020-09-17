@@ -3,27 +3,30 @@
 #include "TiledObject.h"
 #include "Utensils.h"
 #include "Utility.h"
+#include "Map.h"
 #include <list>
 #include <iostream>
 
 class Player : public TiledObject
 {
-	TiledObject* inHands;
-	enum class States { LEFT, UP, RIGHT, DOWN, STAY, NEEDS_UPDATE };
+	enum class States { LEFT, UP, RIGHT, DOWN, STAY, NEED_UPDATE };
+
 	States state;
 	float xSpeed;
 	float ySpeed;
+	TiledObject* inHands;
 	std::list<TiledObject*>& objects;
 public:
 	Player(sf::Texture& texture, float _x, float _y, std::list<TiledObject*>& _objects);
-	void update(float time, MapObjects** map);
-	void trackControls();
+	~Player();
 	sf::Sprite getSprite();
-	bool isSomethingInHands();
 	sf::Sprite getInHandsSprite();
+	std::pair<int, int> getNextPosition();
+	void update(float time, Map* map);
+	void trackControls();
 	void take();
 	void put();
-	std::pair<int, int> getNextPosition();
+	bool isSomethingInHands();
 	void draw(sf::RenderWindow& rw) override;
 };
 

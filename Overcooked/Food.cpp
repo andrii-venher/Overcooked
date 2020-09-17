@@ -1,11 +1,5 @@
 #include "Food.h"
 
-Food::Food(const Food& food) : TiledObject(food)
-{ 
-	type = ObjectTypes::FOOD; 
-	cutBar.setFillColor(sf::Color(255, 0, 0));
-}
-
 Food::Food(sf::Texture& texture, int tileX, int tileY) : Food(texture, 0, 0, tileX, tileY) {}
 
 Food::Food(sf::Texture& texture, float _x, float _y, int tileX, int tileY) : TiledObject(texture, _x, _y, tileX, tileY)

@@ -10,30 +10,31 @@ class Order
 protected:
 	float x = 0;
 	float y = 0;
-	std::list<Food*> foodList;
-	float timer = 0;
 	int orderTime = 80000;
-	sf::RectangleShape timerBar;
+	float timer = 0;
 	int height = TILE_SIZE + 6;
 	int width = TILE_SIZE * 3 + 6;
-	sf::RectangleShape outer;
-	sf::RectangleShape inner;
 	int tips = 4;
 	bool completed = false;
+	std::list<Food*> foodList;
+	sf::RectangleShape timerBar;
+	sf::RectangleShape outer;
+	sf::RectangleShape inner;
 public:
 	Order(sf::Texture& t);
-	bool isValid();
-	void complete();
-	bool isCompleted();
-	void update(float time);
-	void draw(sf::RenderWindow& rw);
-	void setPosition(float _x, float _y);
+	~Order();
 	float getHeight();
 	float getWidth();
-	std::list<Food*> getList();
-	sf::Vector2f getPosition();
 	int getOrderTime();
 	int getTips();
+	sf::Vector2f getPosition();
+	bool isValid();
+	bool isCompleted();
+	void complete();
+	void setPosition(float _x, float _y);
+	void update(float time);
+	std::list<Food*> getList();
+	void draw(sf::RenderWindow& rw);
 };
 
 class OrderQueue
@@ -44,12 +45,13 @@ class OrderQueue
 	std::list<Order*> queue;
 	void resetPosition(Order* order);
 public:
+	~OrderQueue();
+	int getTips();
+	void setPosition(float _x, float _y);
 	void add(Order* order);
 	void update(float time);
-	void draw(sf::RenderWindow& rw);
-	void setPosition(float _x, float _y);
 	std::list<Order*> getOrders();
-	int getTips();
+	void draw(sf::RenderWindow& rw);
 };
 
 class RandomOrderFactory

@@ -62,6 +62,15 @@ Map::Map(sf::Texture& _texture, std::list<TiledObject*>& _objects) : objects(_ob
 	file.close();
 }
 
+Map::~Map()
+{
+	for (int i = 0; i < height; i++)
+	{
+		delete[] map[i];
+	}
+	delete[] map;
+}
+
 void Map::draw(sf::RenderWindow& rw)
 {
 	for (int i = 0; i < height; i++)

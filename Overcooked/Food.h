@@ -14,7 +14,6 @@ protected:
 
 	virtual void changeTexture() = 0;
 public:
-	Food(const Food& food);
 	Food(sf::Texture& texture, int tileX, int tileY);
 	Food(sf::Texture& texture, float _x, float _y, int tileX, int tileY);
 	void cut();

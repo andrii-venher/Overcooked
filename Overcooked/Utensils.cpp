@@ -17,29 +17,18 @@ bool Utensil::isFoodEqualInFilling()
 	
 }
 
-Utensil::Utensil(const Utensil& utensils) : TiledObject(utensils)
-{
-	type = ObjectTypes::UTENSILS;
-}
-
-Utensil::Utensil(sf::Texture& texture, int tileX, int tileY) : Utensil(texture, 0, 0, tileX, tileY) {}
-
 Utensil::Utensil(sf::Texture& texture, float _x, float _y, int tileX, int tileY) : TiledObject(texture, _x, _y, tileX, tileY)
 {
-	type = ObjectTypes::UTENSILS;
+	type = ObjectTypes::UTENSIL;
 }
 
 Utensil::~Utensil()
 {
-	for (auto food : filling)
+	while (filling.size())
 	{
-		delete food;
+		delete filling.front();
+		filling.pop_front();
 	}
-}
-
-CookingUtensil::CookingUtensil(const CookingUtensil& cookingUtensils) : Utensil(cookingUtensils)
-{
-	readyBar.setFillColor(sf::Color(255, 0, 0));
 }
 
 CookingUtensil::CookingUtensil(sf::Texture& texture, int tileX, int tileY) : CookingUtensil(texture, 0, 0, tileX, tileY) {}
@@ -293,7 +282,7 @@ bool Plate::isOnCheckout()
 	return checkout;
 }
 
-std::list<Food*> Plate::getList()
+std::list<Food*> Plate::getFilling()
 {
 	return filling;
 }

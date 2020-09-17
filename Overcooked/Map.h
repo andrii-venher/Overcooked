@@ -19,10 +19,11 @@ class Map
 	std::list<TiledObject*>& objects;
 public:
 	Map(sf::Texture& texture, std::list<TiledObject*>& _objects);
-	void draw(sf::RenderWindow& rw);
-	MapObjects** getMap();
-	MapObjects at(int _x, int _y);
+	~Map();
 	int getWidth();
 	int getHeight();
+	MapObjects** getMap();
+	MapObjects at(int _x, int _y);
+	void draw(sf::RenderWindow& rw);
 };
 

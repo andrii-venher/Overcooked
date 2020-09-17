@@ -12,6 +12,12 @@ GameStats::GameStats(sf::Texture& _texture, float _x, float _y)
 	background.setPosition(_x, _y);
 }
 
+GameStats::~GameStats()
+{
+	delete tips;
+	delete timer;
+}
+
 void GameStats::update(float _time, int _tips)
 {
 	time += _time;

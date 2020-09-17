@@ -24,6 +24,15 @@ Order::Order(sf::Texture& t)
 	resetFieldsPosition();
 }
 
+Order::~Order()
+{
+	while (foodList.size())
+	{
+		delete foodList.front();
+		foodList.pop_front();
+	}
+}
+
 bool Order::isValid()
 {
 	if (completed)
@@ -122,6 +131,15 @@ void OrderQueue::resetPosition(Order* order)
 	float _y = (*previous)->getPosition().y;
 	int _height = (*previous)->getHeight();
 	(*it)->setPosition(_x, _y + _height + 6);
+}
+
+OrderQueue::~OrderQueue()
+{
+	while (queue.size())
+	{
+		delete queue.front();
+		queue.pop_front();
+	}
 }
 
 void OrderQueue::add(Order* order)

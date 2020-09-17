@@ -14,7 +14,12 @@ Player::Player(sf::Texture& texture, float _x, float _y, std::list<TiledObject*>
 	type = ObjectTypes::PLAYER;
 }
 
-void Player::update(float time, MapObjects** map)
+Player::~Player()
+{
+	delete inHands;
+}
+
+void Player::update(float time, Map* map)
 {
 	trackControls();
 
@@ -22,46 +27,39 @@ void Player::update(float time, MapObjects** map)
 	{
 	case Player::States::LEFT:
 		sprite.setRotation(90);
-		if (map[getNextPosition().second / TILE_SIZE][(getNextPosition().first + TILE_SIZE / 2) / TILE_SIZE] == MapObjects::FLOOR)
+		if (map->at((getNextPosition().first + TILE_SIZE / 2) / TILE_SIZE, getNextPosition().second / TILE_SIZE) == MapObjects::FLOOR)
 			xSpeed = -0.1;
 		else
 			xSpeed = 0;
 		ySpeed = 0;
-		
 		break;
 	case Player::States::UP:
 		sprite.setRotation(180);
-		if (map[(getNextPosition().second + TILE_SIZE / 2) / TILE_SIZE][getNextPosition().first / TILE_SIZE] == MapObjects::FLOOR)
+		if (map->at(getNextPosition().first / TILE_SIZE, (getNextPosition().second + TILE_SIZE / 2) / TILE_SIZE) == MapObjects::FLOOR)
 			ySpeed = -0.1;
 		else
 			ySpeed = 0;
 		xSpeed = 0;
-		
 		break;
 	case Player::States::RIGHT:
 		sprite.setRotation(270);
-		if (map[getNextPosition().second / TILE_SIZE][(getNextPosition().first - TILE_SIZE / 2) / TILE_SIZE] == MapObjects::FLOOR)
+		if (map->at((getNextPosition().first - TILE_SIZE / 2) / TILE_SIZE, getNextPosition().second / TILE_SIZE) == MapObjects::FLOOR)
 			xSpeed = 0.1;
 		else
 			xSpeed = 0;
 		ySpeed = 0;
-		
 		break;
 	case Player::States::DOWN:
 		sprite.setRotation(0);
-		if (map[(getNextPosition().second - TILE_SIZE / 2) / TILE_SIZE][getNextPosition().first / TILE_SIZE] == MapObjects::FLOOR)
+		if (map->at(getNextPosition().first / TILE_SIZE, (getNextPosition().second - TILE_SIZE / 2) / TILE_SIZE) == MapObjects::FLOOR)
 			ySpeed = 0.1;
 		else
 			ySpeed = 0;
 		xSpeed = 0;
-	
 		break;
 	case Player::States::STAY:
+	case Player::States::NEED_UPDATE:
 		xSpeed = ySpeed = 0;
-		break;
-	case Player::States::NEEDS_UPDATE:
-		xSpeed = ySpeed = 0;
-		break;
 	default:
 		break;
 	}
@@ -87,7 +85,7 @@ void Player::update(float time, MapObjects** map)
 		case Player::States::DOWN:
 			inHands->setPosition(x, y + inHands->getTileRect().height);
 			break;
-		case Player::States::NEEDS_UPDATE:
+		case Player::States::NEED_UPDATE:
 		{
 			switch (getRotation())
 			{
@@ -106,8 +104,8 @@ void Player::update(float time, MapObjects** map)
 			default:
 				break;
 			}
+			break;
 		}
-		break;
 		default:
 			break;
 		}
@@ -138,7 +136,7 @@ void Player::trackControls()
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 		{
-			state = States::NEEDS_UPDATE;
+			state = States::NEED_UPDATE;
 		}
 	}
 }
@@ -198,10 +196,10 @@ void Player::put()
 	{
 		if (obj->getSprite().getPosition() == pos)
 		{
-			if (obj->getType() == ObjectTypes::UTENSILS)
+			if (obj->getType() == ObjectTypes::UTENSIL)
 			{
 				Utensil* utensil = (Utensil*)obj;
-				if (inHands->getType() == ObjectTypes::UTENSILS)
+				if (inHands->getType() == ObjectTypes::UTENSIL)
 				{
 					Utensil* inHandsUtensil = (Utensil*)inHands;
 					inHandsUtensil->moveToUtensil(utensil);

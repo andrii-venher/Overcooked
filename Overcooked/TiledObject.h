@@ -3,7 +3,7 @@
 #include <iostream>
 #include "GameSettings.h"
 
-enum class ObjectTypes { PLAYER, FOOD, UTENSILS };
+enum class ObjectTypes { PLAYER, FOOD, UTENSIL };
 
 class TiledObject
 {
@@ -14,14 +14,13 @@ protected:
 	sf::IntRect tileRect;
 	ObjectTypes type;
 public:
-	TiledObject(const TiledObject& obj);
 	TiledObject(sf::Texture& texture, int tileX, int tileY);
 	TiledObject(sf::Texture& texture, float _x, float _y, int tileX, int tileY);
 	sf::Sprite getSprite();
+	Rotations getRotation();
+	sf::IntRect getTileRect();
 	void setPosition(float _x, float _y);
 	void setScale(float _factorX, float _factorY);
-	sf::IntRect getTileRect();
-	Rotations getRotation();
 	virtual void draw(sf::RenderWindow& rw);
 	ObjectTypes getType();
 };

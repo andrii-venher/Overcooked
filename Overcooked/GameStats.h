@@ -23,6 +23,7 @@ class GameStats
 	sf::RectangleShape background;
 public:
 	GameStats(sf::Texture& _texture, float _x, float _y);
+	~GameStats();
 	void update(float _time, int _tips);
 	void draw(sf::RenderWindow& rw);
 };

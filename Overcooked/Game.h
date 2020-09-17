@@ -23,8 +23,14 @@ class Game
 	void generateOrders(float time);
 	void checkDispencer();
 	void checkCutting();
+	//returns true if order is completed -> need to remove plate from object list
+	bool checkOrders(Plate* plate);
+	//returns true if object falls into trash can -> need to remove object from object list
+	bool checkTrash(TiledObject* obj);
+	void updateUtensil(Utensil* utensil, float time);
 public:
 	Game();
+	~Game();
 	void loop();
 };
 
