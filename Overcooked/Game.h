@@ -17,6 +17,8 @@ class Game
 	sf::Sprite background;
 	sf::Texture backgroundTexture;
 	GameStats* stats;
+	const int gameTime = 300000;
+	float timer;
 
 	void generatePlates();
 	void generateCookingUtensils();
@@ -28,6 +30,7 @@ class Game
 	//returns true if object falls into trash can -> need to remove object from object list
 	bool checkTrash(TiledObject* obj);
 	void updateUtensil(Utensil* utensil, float time);
+	void gameover(int score);
 public:
 	Game();
 	~Game();

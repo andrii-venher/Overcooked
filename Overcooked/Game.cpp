@@ -11,6 +11,7 @@ Game::Game()
 	background.setPosition(map->getWidth() * TILE_SIZE, 0);
 	queue->setPosition(map->getWidth() * TILE_SIZE, TILE_SIZE);
 	stats = new GameStats(tileset, map->getWidth() * TILE_SIZE, 0);
+	timer = gameTime;
 }
 
 Game::~Game()
@@ -71,7 +72,7 @@ void Game::generateOrders(float time)
 		RandomOrderFactory randomOrderFactory(tileset);
 		queue->add(randomOrderFactory.create());
 	}
-	if (timer < queue->getOrders().front()->getOrderTime() * 0.4)
+	if (timer < queue->getOrders().front()->getOrderTime() * 0.45)
 	{
 		timer += time;
 	}
@@ -206,6 +207,33 @@ void Game::updateUtensil(Utensil* utensil, float time)
 	}
 }
 
+void Game::gameover(int score)
+{
+	sf::RenderWindow gameoverWindow(sf::VideoMode(152, 45), "Overcooked!",
+		sf::Style::Close);
+	sf::Font font;
+	font.loadFromFile("Fonts/lucida.ttf");
+	sf::Text text;
+	text.setFont(font);
+	text.setCharacterSize(20);
+	text.setString("Game is over!\nScore: " + std::to_string(score));
+	while (gameoverWindow.isOpen())
+	{
+		sf::Event event;
+		while (gameoverWindow.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+			{
+				gameoverWindow.close();
+				return;
+			}
+		}
+		gameoverWindow.clear();
+		gameoverWindow.draw(text);
+		gameoverWindow.display();
+	}
+}
+
 void Game::loop()
 {
 	sf::RenderWindow window(sf::VideoMode(TILE_SIZE * map->getWidth() + TILE_SIZE * 3 + 6, TILE_SIZE * map->getHeight()), "Overcooked!",
@@ -218,6 +246,13 @@ void Game::loop()
 		float time = clock.getElapsedTime().asMicroseconds();
 		time /= 500;
 		clock.restart();
+		timer -= time;
+		if (timer < 0)
+		{
+			window.close();
+			gameover(queue->getTips());
+			return;
+		}
 		//if order was added, one more plate will appear
 		generatePlates();
 		sf::Event event;
@@ -295,7 +330,7 @@ void Game::loop()
 		queue->update(time);
 		queue->draw(window);
 
-		stats->update(time, queue->getTips());
+		stats->update(timer, queue->getTips());
 		stats->draw(window);
 
 		window.display();

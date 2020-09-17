@@ -163,8 +163,10 @@ void OrderQueue::update(float time)
 	{
 		if ((*it)->isCompleted())
 			totalTips += (*it)->getTips();
-		else if(totalTips > 0)
+		else
 			totalTips -= 10;
+		if (totalTips < 0)
+			totalTips = 0;
 		queue.erase(it);
 	}
 	for (const auto& order : queue)

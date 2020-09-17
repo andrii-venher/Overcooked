@@ -20,8 +20,7 @@ GameStats::~GameStats()
 
 void GameStats::update(float _time, int _tips)
 {
-	time += _time;
-	timer->setText(std::to_string((int)time / 2000));
+	timer->setText(std::to_string((int)_time / 2000));
 	tips->setText(std::to_string(_tips));
 }
 

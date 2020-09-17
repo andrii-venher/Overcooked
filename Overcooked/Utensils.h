@@ -29,7 +29,7 @@ public:
 class CookingUtensil : public Utensil
 {
 protected:
-	const int readyTime = 1000;
+	const int readyTime = 3000;
 	int readyTimer = 0;
 	bool stove = false;
 	sf::RectangleShape readyBar;

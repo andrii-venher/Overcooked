@@ -19,7 +19,6 @@ class GameStats
 	sf::Font font;
 	StatObject* tips;
 	StatObject* timer;
-	float time = 0.0;
 	sf::RectangleShape background;
 public:
 	GameStats(sf::Texture& _texture, float _x, float _y);
