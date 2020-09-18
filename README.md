@@ -1,10 +1,10 @@
 # Overcooked!
 
 This project is my remake of the original [Overcooked!](https://en.wikipedia.org/wiki/Overcooked "Overcooked Wikipedia") game.
-Language: __C++__
-Programming paradigm: __OOP__
-Additional libraries: [SFML](https://www.sfml-dev.org/ "SFML")
-IDE: Microsoft Visual Studio 2019
+> Language: __C++__
+> Programming paradigm: __OOP__
+> Additional libraries: [SFML](https://www.sfml-dev.org/ "SFML")
+> IDE: Microsoft Visual Studio 2019
 
 ## A few words about...
 
