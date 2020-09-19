@@ -1,13 +1,5 @@
 # Overcooked!
-
-This project is my remake of the original [Overcooked!](https://en.wikipedia.org/wiki/Overcooked "Overcooked Wikipedia") game.
-> Language: __C++__
-> Programming paradigm: __OOP__
-> Additional libraries: [SFML](https://www.sfml-dev.org/ "SFML")
-> IDE: Microsoft Visual Studio 2019
-
-## A few words about...
-
+My remake of the original [Overcooked!](https://en.wikipedia.org/wiki/Overcooked "Overcooked Wikipedia") game. MS Visual Studio 2019, C++, [SFML](https://www.sfml-dev.org/ "SFML").
 #### Keyboard controls
 + __WASD__: movement
 + __Space__: take/put
@@ -22,5 +14,7 @@ Obviously, you should cut the food on a cutting board before trying to cook it.
 If you've made the wrong meal, you can use the trash can to clean your utensil. You can also put food in the trash can (_for what reason -___-?_).
 
 When the time is up, the game is over!
-
 __GLHF!__
+<p align="center"> 
+<img src="https://github.com/VengerAndrey/Overcooked/blob/master/gameplay.png">
+</p>
